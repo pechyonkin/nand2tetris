@@ -14,5 +14,19 @@ CHIP Mux {
     OUT out;
 
     PARTS:
-    // Put your code here:
+    // Inversed inputs
+    Not (in=a, out=notA);
+    Not (in=b, out=notB);
+    Not (in=sel, out=notSel);
+    // Row one
+    And (a=a, b=b, out=aAndB);
+    // Row two
+    And (a=a, b=notB, out=aAndNotB);
+    And (a=aAndNotB, b=notSel, out=aAndNotbAndNotSel);
+    // Row three
+    And (a=notA, b=b, out=notAAndB);
+    And (a=notAAndB, b=sel, out=notAAndBAndSel);
+    // One or two or three
+    Or (a=aAndB, b=aAndNotbAndNotSel, out=oneOrTwo);
+    Or (a=oneOrTwo, b=notAAndBAndSel, out=out);
 }
