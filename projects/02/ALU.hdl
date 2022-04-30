@@ -57,6 +57,18 @@ CHIP ALU {
     Mux16(a=xandy, b=xplusy, sel=f, out=fout);
     // Compute final not
     Not16(in=fout, out=nfout);
-    Mux16(a=fout, b=nfout, sel=no, out=out);
-
+    // Save output to a variable 'output'
+    Mux16(a=fout, b=nfout, sel=no, out=output);
+    // Channel output to out pin
+    Mux16(a=output, b=false, sel=false, out=out);
+    // Handle output pins
+    // Negative out pin
+    Mux16(a=output, b=false, sel=false, out[0..14]=trash, out[15]=ng);
+    // Zero out pin
+    Mux16(a=output, b=false, sel=false, out[0..7]=firsthalf, out[8..15]=secondhalf);
+    Or8Way(in=firsthalf, out=firstzr);
+    Not(in=firstzr, out=nfirstzr);
+    Or8Way(in=secondhalf, out=secondzr);
+    Not(in=secondzr, out=nsecondzr);
+    And(a=nfirstzr, b=nsecondzr, out=zr);
 }
