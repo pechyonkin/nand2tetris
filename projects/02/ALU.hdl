@@ -42,5 +42,21 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+    // Handle X branch
+    Mux16(a=x, b=false, sel=zx, out=xzx);
+    Not16(in=xzx, out=nxzx);
+    Mux16(a=xzx, b=nxzx, sel=nx, out=xnx);
+    // Handle Y branch
+    Mux16(a=y, b=false, sel=zy, out=yzy);
+    Not16(in=yzy, out=nyzy);
+    Mux16(a=yzy, b=nyzy, sel=ny, out=yny);
+    // Compute plus and and functions
+    Add16(a=xnx, b=yny, out=xplusy);
+    And16(a=xnx, b=yny, out=xandy);
+    // Compute f function
+    Mux16(a=xandy, b=xplusy, sel=f, out=fout);
+    // Compute final not
+    Not16(in=fout, out=nfout);
+    Mux16(a=fout, b=nfout, sel=no, out=out);
+
 }
