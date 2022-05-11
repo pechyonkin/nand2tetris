@@ -21,5 +21,5 @@ CHIP RAM16K {
     RAM4K(in=in, load=load1, address=address[0..11], out=rout1);
     RAM4K(in=in, load=load2, address=address[0..11], out=rout2);
     RAM4K(in=in, load=load3, address=address[0..11], out=rout3);
-    Mux4Way16(a=rout0, b=rout1, c=rout2, d=rout2, sel=address[12..13], out=out);
+    Mux4Way16(a=rout0, b=rout1, c=rout2, d=rout3, sel=address[12..13], out=out);
 }
