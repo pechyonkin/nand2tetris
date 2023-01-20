@@ -13,6 +13,7 @@
 
 // Put your code here.
 
+//   @3
   @8192
   D=A
   
@@ -22,14 +23,34 @@
   @i
   M=0 // to keep track of iteration
   
-  @color
-  M=-1 // all 1s (two's complement) to fill a chunk with black
-
   @SCREEN
   D=A
 
   @screenptr
   M=D // pointer of current screen chunk
+
+  @isblack
+  M=0 // to keep track if screen is black
+
+(START)
+
+  @color
+  M=-1 // black
+
+  @KBD
+  D=M // ket key
+
+  // if D is zero, make color white and fill
+  // if D is non-zero, make color black and fill  
+
+  @FILL
+  D;JNE // fill with black if non-zero
+
+  @color
+  M=0 // set to white
+
+  @FILL
+  0;JMP
 
 (FILL)
   @i
@@ -38,7 +59,7 @@
   @n
   D=D-M // i - n
 
-  @END
+  @ENDFILL
   D;JGE // stop iterating if i >= n, i.e. i - n >= 0
 
   @color
@@ -55,6 +76,19 @@
   M=M+1 // increment counter
 
   @FILL
+  0;JMP
+
+
+(ENDFILL)
+  @i
+  M=0 // reset iterator variable
+
+  @SCREEN
+  D=A
+  @screenptr
+  M=D // reset screen pointer
+
+  @START
   0;JMP
 
 (END)
