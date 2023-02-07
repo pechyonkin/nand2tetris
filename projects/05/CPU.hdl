@@ -40,4 +40,53 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+
+    // Handling the D-Register
+    And(a=instruction[15], b=instruction[4], out=DLoad);
+    DRegister(in=ALUOut, load=DLoad, out=DOut);
+
+    // Handling the A-Register
+    // Calculate if this is A-instruction
+    Not(in=instruction[15], out=IsAInstruction);
+    // Pre-A-register Mux needs to select instruction if this is A-instruction
+    Mux16(a=ALUOut, b=instruction, sel=IsAInstruction, out=PreAMuxOut);
+    // C-instruction, d1 bit is set -> need to load into A-register
+    And(a=instruction[15], b=instruction[5], out=CInstrLoadAReg); 
+    // Load A-register if A-instruction, or C-instruction with d1 bit set
+    Or(a=IsAInstruction, b=CInstrLoadAReg, out=ALoad);
+    ARegister(in=PreAMuxOut, load=ALoad, out=AOut, out[0..14]=addressM);
+
+    // Handling Post-A-register Mux, which handles ALU's second input
+    // ALU's second input comes from either A-register or memory, and is controlled
+    // by C-instruction's a-bit (instruction[12])
+    And(a=instruction[15], b=instruction[12], out=PostAMuxSel);
+    Mux16(a=AOut, b=inM, sel=PostAMuxSel, out=PostAMuxOut);
+
+    // Handling the ALU
+    ALU(x=DOut, y=PostAMuxOut, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUOut, out=outM, zr=ZR, ng=NG);
+
+    // Handling load output memory flag
+    And(a=instruction[3], b=instruction[15], out=writeM);
+
+    // Handling Program Counter's load bit; load bit = 1 -> jump to instruction
+    // incoming into PC from A-register
+    // j2 set (=0) and ALU output is zero -> should load PC
+    And(a=instruction[1], b=ZR, out=PCLoadZero);
+    // j1 set (<0) and ALU output is negative -> should load PC
+    And(a=instruction[2], b=NG, out=PCLoadNeg);
+    // j0 set (>0) and ALU output is positive -> should load PC
+    Not(in=ZR, out=NotZR);
+    Not(in=NG, out=NotNG);
+    And(a=NotZR, b=NotNG, out=ALUOutIsPositive);
+    And(a=instruction[0], b=ALUOutIsPositive, out=PCLoadPositive);
+    // Check if any PCLoad bits are set
+    Or(a=PCLoadZero, b=PCLoadNeg, out=PCLoadZeroOrNeg);
+    Or(a=PCLoadZeroOrNeg, b=PCLoadPositive, out=PCLoadSet);
+    // Only load PC if it is C-instruction
+    And(a=instruction[15], b=PCLoadSet, out=NeedToJump);
+    // Either you jump, or you increment (not accounting for reset bit)
+    Not(in=NeedToJump, out=NeedToIncrement);
+
+    // Handling the Program Counter
+    PC(in=AOut, load=NeedToJump, inc=NeedToIncrement, reset=reset, out[0..14]=pc);
 }
