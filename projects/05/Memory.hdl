@@ -28,4 +28,18 @@ CHIP Memory {
 
     PARTS:
     // Put your code here:
+    // Address[14] will be 1 for all addresses >= 16384, i.e. for any device address it will be 1
+    // Thus, we can use address[14] to see if we need to load devices or ram
+    DMux(in=load, sel=address[14], a=loadRam, b=loadDevices);
+    // For a device address, address[13] will only be 1 for keyboard, all Screen addresses have this
+    // bit set to 0. Thus, we can use address[13] to determine whether to load screen or keyboard
+    DMux(in=loadDevices, sel=address[13], a=loadScreen, b=loadKeyboard);
+    // RAM16K has address bus width of 14, so we feed least significant 14 bits of address to it
+    RAM16K(in=in, load=loadRam, address=address[0..13], out=ramOut);
+    // We offset screen address by 16383 not including two most significant bits from address
+    Screen(in=in, load=loadScreen, address=address[0..12], out=screenOut);
+    Keyboard(out=keyboardOut);
+    // Combine the output based on selector bits used in DMux, i.e. revert DMux back to output
+    Mux16(a=screenOut, b=keyboardOut, sel=address[13], out=deviceOut);
+    Mux16(a=ramOut, b=deviceOut, sel=address[14], out=out);
 }
