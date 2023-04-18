@@ -2,5 +2,5 @@
 *.out
 .DS_Store
 programs/*
-.idea/*
-.pytest_cache/*
+.idea
+.pytest_cache
