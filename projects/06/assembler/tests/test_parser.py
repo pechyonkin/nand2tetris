@@ -1,6 +1,12 @@
 import pytest
 
-from assembler.parser import get_line_type, LineType, parse_c_instruction
+from assembler.parser import (
+    get_line_type,
+    LineType,
+    parse_c_instruction,
+    parse_a_instruction,
+    AInstruction,
+)
 
 
 @pytest.mark.parametrize(
@@ -45,3 +51,19 @@ def test_parse_c_instruction(
     assert instr.dest == exp_dest
     assert instr.comp == exp_comp
     assert instr.jump == exp_jump
+
+
+@pytest.mark.parametrize(
+    "line, expected_address",
+    [
+        ("@0", "0000000000000000"),
+        ("@1", "0000000000000001"),
+        ("@10", "0000000000001010"),
+        ("@32767", "0111111111111111"),
+    ],
+)
+def test_parse_a_instruction(line, expected_address):
+    assert len(expected_address) == 16
+    instruction = parse_a_instruction(line)
+    assert isinstance(instruction, AInstruction)
+    assert instruction.address == expected_address

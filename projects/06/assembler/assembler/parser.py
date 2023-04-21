@@ -64,7 +64,7 @@ def parse_c_instruction(line: str) -> CInstruction:
         jump = line_split_for_jump[-1]
     line = line_split_for_jump[0]
 
-    # Handle destination part
+    # Handle destination and comp parts
     line_split_for_dest = line.split("=")
     if len(line_split_for_dest) == 1:
         dest = ""
@@ -78,3 +78,24 @@ def parse_c_instruction(line: str) -> CInstruction:
     print(f"JUMP: {jump}")
 
     return CInstruction(dest=dest, comp=comp, jump=jump)
+
+
+def parse_a_instruction(line: str) -> AInstruction:
+    """
+    Parses an A-instruction in Hack assembly language and returns its binary representation.
+
+    :param line: A string representing an A-instruction, in the format "@number".
+    :return: An AInstruction object, containing the binary representation of the address.
+    """
+    number_string = line[1:]  # Extract the number part of the A-instruction.
+    number = int(number_string)  # Convert the number string to an integer.
+    bin_string = bin(number)[2:]  # Convert the integer to a binary string.
+    padded_bin_string = bin_string.zfill(
+        15
+    )  # Pad the binary string with zeroes to make it 15 characters long.
+    instruction = (
+        "0" + padded_bin_string
+    )  # Prepend the instruction type (0) to the binary address.
+    return AInstruction(
+        address=instruction
+    )  # Return an AInstruction object with the binary address.
