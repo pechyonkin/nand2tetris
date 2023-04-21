@@ -1,16 +1,17 @@
-# This is a sample Python script.
+from pathlib import Path
 
-# Press <no shortcut> to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from assembler.parser import process_file
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f"Hi, {name}")  # Press ⌘F8 to toggle the breakpoint.
+FILES_TO_PROCESS = [
+    "/Users/maxbrut/git/nand2tetris/projects/06/add/Add.asm",
+    "/Users/maxbrut/git/nand2tetris/projects/06/pong/PongL.asm",
+]
+
+PATHS_TO_PROCESS = [Path(f) for f in FILES_TO_PROCESS]
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == "__main__":
-    print_hi("PyCharm")
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    for path in PATHS_TO_PROCESS:
+        process_file(path_to_file=path)

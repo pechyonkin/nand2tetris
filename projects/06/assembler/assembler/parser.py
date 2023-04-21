@@ -1,7 +1,10 @@
 # Parser of loaded lines
+import os
 from abc import abstractmethod
 from enum import Enum
+from pathlib import Path
 
+from assembler.files import load_lines
 from assembler.instruction_maps import COMP_MAP, DEST_MAP, JUMP_MAP
 
 
@@ -36,8 +39,10 @@ class AInstruction(Instruction):
         self.address = address
 
     def make_machine_instruction(self) -> str:
-        address_bits = ...  # 15-bit representation of address
-        return "0" + address_bits
+        number = int(self.address)
+        bin_string = bin(number)[2:]
+        padded_bin_string = bin_string.zfill(15)
+        return "0" + padded_bin_string
 
 
 def get_line_type(line: str) -> LineType:
@@ -73,29 +78,44 @@ def parse_c_instruction(line: str) -> CInstruction:
         dest = line_split_for_dest[0]
         comp = line_split_for_dest[-1]
 
-    print(f"DEST: {dest}")
-    print(f"COMP: {comp}")
-    print(f"JUMP: {jump}")
+    # print(f"DEST: {dest}")
+    # print(f"COMP: {comp}")
+    # print(f"JUMP: {jump}")
 
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
 
 def parse_a_instruction(line: str) -> AInstruction:
-    """
-    Parses an A-instruction in Hack assembly language and returns its binary representation.
+    address_string = line[1:]  # Extract the number part of the A-instruction.
+    return AInstruction(address=address_string)
 
-    :param line: A string representing an A-instruction, in the format "@number".
-    :return: An AInstruction object, containing the binary representation of the address.
-    """
-    number_string = line[1:]  # Extract the number part of the A-instruction.
-    number = int(number_string)  # Convert the number string to an integer.
-    bin_string = bin(number)[2:]  # Convert the integer to a binary string.
-    padded_bin_string = bin_string.zfill(
-        15
-    )  # Pad the binary string with zeroes to make it 15 characters long.
-    instruction = (
-        "0" + padded_bin_string
-    )  # Prepend the instruction type (0) to the binary address.
-    return AInstruction(
-        address=instruction
-    )  # Return an AInstruction object with the binary address.
+
+def process_file(path_to_file: Path) -> None:
+    lines = load_lines(path=path_to_file)
+    instructions = []
+    for line in lines:
+        line_type = get_line_type(line=line)
+        if line_type == LineType.C_INSTRUCTION:
+            instructions.append(parse_c_instruction(line=line))
+        if line_type == LineType.A_INSTRUCTION:
+            instructions.append(parse_a_instruction(line=line))
+
+    in_fname = path_to_file.name
+    dir_name = path_to_file.parent
+    out_fname = in_fname.split(".")[0] + ".hack"
+    out_path = dir_name / out_fname
+
+    print(f"IN FNAME: {in_fname}")
+    print(f"OUT FNAME: {out_fname}")
+    print(f"DIR: {dir_name}")
+    print(f"OUT PATH {out_path}")
+
+    if out_path.exists():
+        print(f"OUTPUT PATH '{out_path}' EXISTS!")
+        print(f"DELETING '{out_path}'!")
+        os.remove(out_path)
+
+    out_lines = [instr.make_machine_instruction() + "\n" for instr in instructions]
+
+    with open(out_path, "w") as f:
+        f.writelines(out_lines)

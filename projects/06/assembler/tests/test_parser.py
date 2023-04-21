@@ -6,7 +6,9 @@ from assembler.parser import (
     parse_c_instruction,
     parse_a_instruction,
     AInstruction,
+    process_file,
 )
+from main import PATHS_TO_PROCESS
 
 
 @pytest.mark.parametrize(
@@ -54,7 +56,7 @@ def test_parse_c_instruction(
 
 
 @pytest.mark.parametrize(
-    "line, expected_address",
+    "line, expected_instruction",
     [
         ("@0", "0000000000000000"),
         ("@1", "0000000000000001"),
@@ -62,8 +64,14 @@ def test_parse_c_instruction(
         ("@32767", "0111111111111111"),
     ],
 )
-def test_parse_a_instruction(line, expected_address):
-    assert len(expected_address) == 16
+def test_parse_a_instruction(line, expected_instruction):
+    assert len(expected_instruction) == 16
     instruction = parse_a_instruction(line)
     assert isinstance(instruction, AInstruction)
-    assert instruction.address == expected_address
+    assert instruction.make_machine_instruction() == expected_instruction
+
+
+def test_process_file():
+    print("THIS! " * 42)
+    for path in PATHS_TO_PROCESS:
+        process_file(path_to_file=path)
