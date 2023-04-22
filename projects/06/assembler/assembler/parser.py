@@ -3,6 +3,7 @@ import os
 from abc import abstractmethod
 from enum import Enum
 from pathlib import Path
+from typing import List
 
 from assembler.files import load_lines
 from assembler.instruction_maps import COMP_MAP, DEST_MAP, JUMP_MAP
@@ -90,8 +91,7 @@ def parse_a_instruction(line: str) -> AInstruction:
     return AInstruction(address=address_string)
 
 
-def process_file(path_to_file: Path) -> None:
-    lines = load_lines(path=path_to_file)
+def process_lines(lines: List[str]) -> List[str]:
     instructions = []
     for line in lines:
         line_type = get_line_type(line=line)
@@ -99,6 +99,14 @@ def process_file(path_to_file: Path) -> None:
             instructions.append(parse_c_instruction(line=line))
         if line_type == LineType.A_INSTRUCTION:
             instructions.append(parse_a_instruction(line=line))
+
+    out_lines = [i.make_machine_instruction() + "\n" for i in instructions]
+    return out_lines
+
+
+def process_file(path_to_file: Path) -> None:
+    lines = load_lines(path=path_to_file)
+    out_lines = process_lines(lines=lines)
 
     in_fname = path_to_file.name
     dir_name = path_to_file.parent
@@ -114,8 +122,6 @@ def process_file(path_to_file: Path) -> None:
         print(f"OUTPUT PATH '{out_path}' EXISTS!")
         print(f"DELETING '{out_path}'!")
         os.remove(out_path)
-
-    out_lines = [instr.make_machine_instruction() + "\n" for instr in instructions]
 
     with open(out_path, "w") as f:
         f.writelines(out_lines)

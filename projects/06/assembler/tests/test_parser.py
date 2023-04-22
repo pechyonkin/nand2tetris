@@ -1,4 +1,5 @@
 import pytest
+from snapshottest import snapshot
 
 from assembler.parser import (
     get_line_type,
@@ -7,8 +8,35 @@ from assembler.parser import (
     parse_a_instruction,
     AInstruction,
     process_file,
+    process_lines,
 )
 from main import PATHS_TO_PROCESS
+
+
+TEST_LINES_NO_SYMBOLS_1 = [
+    "// This file is part of www.nand2tetris.org",
+    '// and the book "The Elements of Computing Systems"',
+    "// by Nisan and Schocken, MIT Press.",
+    "// File name: projects/06/add/Add.asm",
+    "",
+    "// Computes R0 = 2 + 3  (R0 refers to RAM[0])",
+    "",
+    "@2",
+    "D=A",
+    "@3",
+    "D=D+A",
+    "@0",
+    "M=D",
+]
+
+TEST_LINES_NO_SYMBOLS_1_EXP = [
+    "0000000000000010\n",
+    "1110110000010000\n",
+    "0000000000000011\n",
+    "1110000010010000\n",
+    "0000000000000000\n",
+    "1110001100001000\n",
+]
 
 
 @pytest.mark.parametrize(
@@ -71,6 +99,12 @@ def test_parse_a_instruction(line, expected_instruction):
     assert instruction.make_machine_instruction() == expected_instruction
 
 
+def test_process_lines():
+    instr_lines = process_lines(lines=TEST_LINES_NO_SYMBOLS_1)
+    assert instr_lines == TEST_LINES_NO_SYMBOLS_1_EXP
+
+
+@pytest.mark.skip("Don't process files for now.")
 def test_process_file():
     print("THIS! " * 42)
     for path in PATHS_TO_PROCESS:
