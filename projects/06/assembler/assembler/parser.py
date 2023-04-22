@@ -14,6 +14,7 @@ class LineType(Enum):
     EMPTY_LINE = 2
     A_INSTRUCTION = 3
     C_INSTRUCTION = 4
+    LABEL_SYMBOL = 5
 
 
 class Instruction:
@@ -54,10 +55,12 @@ def get_line_type(line: str) -> LineType:
     """
     if not line:
         return LineType.EMPTY_LINE
-    if "//" in line:
+    if line.startswith("//"):
         return LineType.COMMENT_LINE
-    if "@" in line:
+    if line.startswith("@"):
         return LineType.A_INSTRUCTION
+    if line.startswith("("):
+        return LineType.LABEL_SYMBOL
     return LineType.C_INSTRUCTION
 
 
