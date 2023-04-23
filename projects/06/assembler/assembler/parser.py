@@ -3,7 +3,7 @@ import os
 from abc import abstractmethod
 from enum import Enum
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 from assembler.files import load_lines
 from assembler.instruction_maps import COMP_MAP, DEST_MAP, JUMP_MAP
@@ -62,6 +62,21 @@ def get_line_type(line: str) -> LineType:
     if line.startswith("("):
         return LineType.LABEL_SYMBOL
     return LineType.C_INSTRUCTION
+
+
+def get_label_symbols_dict(lines: List[str]) -> Dict[str, int]:
+    symbols_dict = dict()
+    cur_code_line = -1
+    for line in lines:
+        line_type = get_line_type(line=line)
+        if line_type == LineType.A_INSTRUCTION:
+            cur_code_line += 1
+        elif line_type == LineType.C_INSTRUCTION:
+            cur_code_line += 1
+        elif line_type == LineType.LABEL_SYMBOL:
+            symbol = line[1:-1]
+            symbols_dict[symbol] = cur_code_line + 1
+    return symbols_dict
 
 
 def parse_c_instruction(line: str) -> CInstruction:

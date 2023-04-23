@@ -9,6 +9,7 @@ from assembler.parser import (
     AInstruction,
     process_file,
     process_lines,
+    get_label_symbols_dict,
 )
 from main import PATHS_TO_PROCESS
 
@@ -31,6 +32,7 @@ TEST_LINES_SYMBOLS_1 = [
     "   D=M              // D = second number",
     "   @OUTPUT_D",
     "   0;JMP            // goto output_d",
+    "// Some other comment here",
     "(OUTPUT_FIRST)",
     "   @R0             ",
     "   D=M              // D = first number",
@@ -53,3 +55,9 @@ TEST_LINES_NO_SYMBOLS_1_EXP = []
 )
 def test_get_symbol_line_type(line: str, expected_line_type: LineType) -> None:
     assert get_line_type(line=line) == expected_line_type
+
+
+def test_get_label_symbols():
+    result = get_label_symbols_dict(lines=TEST_LINES_SYMBOLS_1)
+    print("RESULT!!! " * 42)
+    print(result)
