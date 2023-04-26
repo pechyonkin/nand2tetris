@@ -61,3 +61,8 @@ def test_get_label_symbols():
     result = get_label_symbols_dict(lines=TEST_LINES_SYMBOLS_1)
     print("RESULT!!! " * 42)
     print(result)
+    assert result == {
+        "OUTPUT_FIRST": 10,
+        "OUTPUT_D": 12,
+        "INFINITE_LOOP": 14,
+    }
