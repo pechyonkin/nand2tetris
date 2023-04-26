@@ -36,15 +36,23 @@ class CInstruction(Instruction):
         return "111" + comp_bits + dest_bits + jump_bits
 
 
+def int_to_address(number: int) -> str:
+    bin_string = bin(number)[2:]
+    padded_bin_string = bin_string.zfill(15)
+    return padded_bin_string
+
+
+def int_to_a_instruction(number: int) -> str:
+    return "0" + int_to_address(number=number)
+
+
 class AInstruction(Instruction):
     def __init__(self, address: str):
         self.address = address
 
     def make_machine_instruction(self) -> str:
         number = int(self.address)
-        bin_string = bin(number)[2:]
-        padded_bin_string = bin_string.zfill(15)
-        return "0" + padded_bin_string
+        return int_to_a_instruction(number=number)
 
 
 def get_line_type(line: str) -> LineType:
