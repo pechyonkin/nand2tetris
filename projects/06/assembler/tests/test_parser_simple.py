@@ -96,7 +96,7 @@ def test_parse_a_instruction(line, expected_instruction):
     assert len(expected_instruction) == 16
     instruction = parse_a_instruction(line)
     assert isinstance(instruction, AInstruction)
-    assert instruction.make_machine_instruction() == expected_instruction
+    assert instruction.make_machine_instruction() == expected_instruction + "\n"
 
 
 def test_process_lines():

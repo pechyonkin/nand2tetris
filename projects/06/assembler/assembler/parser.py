@@ -5,8 +5,8 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Dict
 
-from assembler.files import load_lines
-from assembler.instruction_maps import COMP_MAP, DEST_MAP, JUMP_MAP
+from assembler.files import load_lines, strip_spaces
+from assembler.instruction_maps import COMP_MAP, DEST_MAP, JUMP_MAP, PREDEFINED_SYMBOLS
 
 
 class LineType(Enum):
@@ -33,7 +33,7 @@ class CInstruction(Instruction):
         comp_bits = COMP_MAP[self.comp]
         dest_bits = DEST_MAP[self.dest]
         jump_bits = JUMP_MAP[self.jump]
-        return "111" + comp_bits + dest_bits + jump_bits
+        return "111" + comp_bits + dest_bits + jump_bits + "\n"
 
 
 def int_to_address(number: int) -> str:
@@ -43,7 +43,7 @@ def int_to_address(number: int) -> str:
 
 
 def int_to_a_instruction(number: int) -> str:
-    return "0" + int_to_address(number=number)
+    return "0" + int_to_address(number=number) + "\n"
 
 
 class AInstruction(Instruction):
@@ -112,21 +112,42 @@ def parse_c_instruction(line: str) -> CInstruction:
     return CInstruction(dest=dest, comp=comp, jump=jump)
 
 
-def parse_a_instruction(line: str) -> AInstruction:
-    address_string = line[1:]  # Extract the number part of the A-instruction.
-    return AInstruction(address=address_string)
+def parse_a_instruction(
+    line: str,
+    symbols_dict: Dict[str, int] = None,
+) -> AInstruction:
+    # Extract the number or symbol part of the A-instruction.
+    num_part = line[1:]
+    if num_part.isnumeric():
+        return AInstruction(address=num_part)
+    assert num_part in symbols_dict, "Symbol {num_part} not found in symbols!"
+    return AInstruction(address=str(symbols_dict[num_part]))
+
+
+def remove_comment_after_instruction(line: str) -> str:
+    """Remove comment after an instruction, if any."""
+    return strip_spaces(line.split("//")[0])
 
 
 def process_lines(lines: List[str]) -> List[str]:
+    symbols_dict = PREDEFINED_SYMBOLS.copy()
+    symbols_dict |= get_label_symbols_dict(lines=lines)
     instructions = []
     for line in lines:
         line_type = get_line_type(line=line)
         if line_type == LineType.C_INSTRUCTION:
+            line = remove_comment_after_instruction(line=line)
             instructions.append(parse_c_instruction(line=line))
         if line_type == LineType.A_INSTRUCTION:
-            instructions.append(parse_a_instruction(line=line))
+            line = remove_comment_after_instruction(line=line)
+            instructions.append(
+                parse_a_instruction(
+                    line=line,
+                    symbols_dict=symbols_dict,
+                )
+            )
 
-    out_lines = [i.make_machine_instruction() + "\n" for i in instructions]
+    out_lines = [i.make_machine_instruction() for i in instructions]
     return out_lines
 
 

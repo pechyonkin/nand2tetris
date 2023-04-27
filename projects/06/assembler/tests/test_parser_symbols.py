@@ -1,18 +1,13 @@
 import pytest
-from snapshottest import snapshot
 
 from assembler.parser import (
     get_line_type,
     LineType,
-    parse_c_instruction,
-    parse_a_instruction,
-    AInstruction,
-    process_file,
     process_lines,
     get_label_symbols_dict,
+    int_to_a_instruction,
+    remove_comment_after_instruction,
 )
-from main import PATHS_TO_PROCESS
-
 
 TEST_LINES_SYMBOLS_1 = [
     "// This file is part of www.nand2tetris.org",
@@ -59,10 +54,33 @@ def test_get_symbol_line_type(line: str, expected_line_type: LineType) -> None:
 
 def test_get_label_symbols():
     result = get_label_symbols_dict(lines=TEST_LINES_SYMBOLS_1)
-    print("RESULT!!! " * 42)
-    print(result)
     assert result == {
         "OUTPUT_FIRST": 10,
         "OUTPUT_D": 12,
         "INFINITE_LOOP": 14,
     }
+
+
+@pytest.mark.parametrize(
+    "raw_line,clean_line",
+    (
+        ("D=D-M            // D = first number - second number", "D=D-M"),
+        ("M=D              // M[2] = D (greatest number)", "M=D"),
+        ("@R0              // M[2] = D (greatest number)", "@R0"),
+    ),
+)
+def test_remove_comment_after_instruction(raw_line: str, clean_line: str):
+    assert remove_comment_after_instruction(raw_line) == clean_line
+
+
+def test_process_lines_with_symbols():
+    lines = [line.lstrip().rstrip() for line in TEST_LINES_SYMBOLS_1]
+    instr_lines = process_lines(lines=lines)
+    assert instr_lines[0] == int_to_a_instruction(0)  # @R0
+    assert instr_lines[2] == int_to_a_instruction(1)  # @R1
+    assert instr_lines[4] == int_to_a_instruction(10)  # @OUTPUT_FIRST -> 10
+    assert instr_lines[6] == int_to_a_instruction(1)  # @R1
+    assert instr_lines[8] == int_to_a_instruction(12)  # @OUTPUT_D -> 12
+    assert instr_lines[10] == int_to_a_instruction(0)  # @R0
+    assert instr_lines[12] == int_to_a_instruction(2)  # @R2
+    assert instr_lines[14] == int_to_a_instruction(14)  # @INFINITE_LOOP -> 14

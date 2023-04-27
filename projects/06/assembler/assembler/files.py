@@ -2,6 +2,10 @@ from pathlib import Path
 from typing import List
 
 
+def strip_spaces(line: str) -> str:
+    return line.lstrip().rstrip()
+
+
 def load_lines(path: Path) -> List[str]:
     """Load lines and drop whitespaces at the beginning and end of each file.
 
@@ -10,5 +14,5 @@ def load_lines(path: Path) -> List[str]:
     """
     with open(path) as f:
         lines = f.readlines()
-    lines = [line.lstrip().rstrip() for line in lines]
+    lines = [strip_spaces(line) for line in lines]
     return lines
