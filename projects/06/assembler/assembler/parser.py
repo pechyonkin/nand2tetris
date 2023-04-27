@@ -87,6 +87,18 @@ def get_label_symbols_dict(lines: List[str]) -> Dict[str, int]:
     return symbols_dict
 
 
+def get_variable_symbols_dict(lines: List[str]) -> Dict[str, int]:
+    symbols_dict = dict()
+    cur_var_idx = 16
+    for line in lines:
+        line_type = get_line_type(line=line)
+        if line_type == LineType.C_INSTRUCTION:
+            symbol = line[1:]
+            if not symbol.isnumeric():
+                symbols_dict[symbol] = cur_var_idx
+    return symbols_dict
+
+
 def parse_c_instruction(line: str) -> CInstruction:
     # Handle jump part
     line_split_for_jump = line.split(";")
@@ -132,27 +144,43 @@ def remove_comment_after_instruction(line: str) -> str:
 def process_lines(lines: List[str]) -> List[str]:
     symbols_dict = PREDEFINED_SYMBOLS.copy()
     symbols_dict |= get_label_symbols_dict(lines=lines)
+    symbols_dict |= get_variable_symbols_dict(lines=lines)
     instructions = []
     for line in lines:
         line_type = get_line_type(line=line)
+        instruction = None
         if line_type == LineType.C_INSTRUCTION:
-            line = remove_comment_after_instruction(line=line)
-            instructions.append(parse_c_instruction(line=line))
+            instruction = parse_c_instruction(line=line)
         if line_type == LineType.A_INSTRUCTION:
-            line = remove_comment_after_instruction(line=line)
-            instructions.append(
-                parse_a_instruction(
-                    line=line,
-                    symbols_dict=symbols_dict,
-                )
+            instruction = parse_a_instruction(
+                line=line,
+                symbols_dict=symbols_dict,
             )
+        if instruction:
+            instructions.append(instruction)
 
     out_lines = [i.make_machine_instruction() for i in instructions]
     return out_lines
 
 
+def filter_lines(lines: List[str]) -> List[str]:
+    """Only keep instruction lines, and remove comments in instruction lines."""
+    clean_lines = []
+    for line in lines:
+        line_type = get_line_type(line=line)
+        if line_type in [
+            LineType.A_INSTRUCTION,
+            LineType.C_INSTRUCTION,
+            LineType.LABEL_SYMBOL,
+        ]:
+            line = remove_comment_after_instruction(line=line)
+            clean_lines.append(line)
+    return clean_lines
+
+
 def process_file(path_to_file: Path) -> None:
     lines = load_lines(path=path_to_file)
+    lines = filter_lines(lines=lines)
     out_lines = process_lines(lines=lines)
 
     in_fname = path_to_file.name

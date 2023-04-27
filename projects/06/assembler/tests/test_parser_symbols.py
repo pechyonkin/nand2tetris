@@ -1,5 +1,6 @@
 import pytest
 
+from assembler.files import strip_spaces
 from assembler.parser import (
     get_line_type,
     LineType,
@@ -7,6 +8,7 @@ from assembler.parser import (
     get_label_symbols_dict,
     int_to_a_instruction,
     remove_comment_after_instruction,
+    filter_lines,
 )
 
 TEST_LINES_SYMBOLS_1 = [
@@ -74,7 +76,8 @@ def test_remove_comment_after_instruction(raw_line: str, clean_line: str):
 
 
 def test_process_lines_with_symbols():
-    lines = [line.lstrip().rstrip() for line in TEST_LINES_SYMBOLS_1]
+    lines = [strip_spaces(line) for line in TEST_LINES_SYMBOLS_1]
+    lines = filter_lines(lines)
     instr_lines = process_lines(lines=lines)
     assert instr_lines[0] == int_to_a_instruction(0)  # @R0
     assert instr_lines[2] == int_to_a_instruction(1)  # @R1
