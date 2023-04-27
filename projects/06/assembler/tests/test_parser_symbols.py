@@ -9,6 +9,7 @@ from assembler.parser import (
     int_to_a_instruction,
     remove_comment_after_instruction,
     filter_lines,
+    get_variable_symbols_dict,
 )
 
 TEST_LINES_SYMBOLS_1 = [
@@ -87,3 +88,22 @@ def test_process_lines_with_symbols():
     assert instr_lines[10] == int_to_a_instruction(0)  # @R0
     assert instr_lines[12] == int_to_a_instruction(2)  # @R2
     assert instr_lines[14] == int_to_a_instruction(14)  # @INFINITE_LOOP -> 14
+
+
+def test_get_variable_symbols_dict():
+    lines = [
+        "@i",
+        "@process.i",
+        "@i",
+        "@process.i",
+        "@sum",
+        "@i",
+        "@y",
+    ]
+    symbols_dict = get_variable_symbols_dict(lines=lines, symbols_dict=dict())
+    assert symbols_dict == {
+        "i": 16,
+        "process.i": 17,
+        "sum": 18,
+        "y": 19,
+    }

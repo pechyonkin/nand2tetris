@@ -87,15 +87,22 @@ def get_label_symbols_dict(lines: List[str]) -> Dict[str, int]:
     return symbols_dict
 
 
-def get_variable_symbols_dict(lines: List[str]) -> Dict[str, int]:
-    symbols_dict = dict()
+def get_variable_symbols_dict(
+    lines: List[str],
+    symbols_dict: Dict[str, int],
+) -> Dict[str, int]:
+    """Add variable symbols to symbol dictionary.
+
+    Need existing symbol dictionary to not treat predefined and label symbols as
+    variable symbols."""
     cur_var_idx = 16
     for line in lines:
         line_type = get_line_type(line=line)
-        if line_type == LineType.C_INSTRUCTION:
+        if line_type == LineType.A_INSTRUCTION:
             symbol = line[1:]
-            if not symbol.isnumeric():
+            if not symbol.isnumeric() and symbol not in symbols_dict:
                 symbols_dict[symbol] = cur_var_idx
+                cur_var_idx += 1
     return symbols_dict
 
 
@@ -144,7 +151,7 @@ def remove_comment_after_instruction(line: str) -> str:
 def process_lines(lines: List[str]) -> List[str]:
     symbols_dict = PREDEFINED_SYMBOLS.copy()
     symbols_dict |= get_label_symbols_dict(lines=lines)
-    symbols_dict |= get_variable_symbols_dict(lines=lines)
+    symbols_dict |= get_variable_symbols_dict(lines=lines, symbols_dict=symbols_dict)
     instructions = []
     for line in lines:
         line_type = get_line_type(line=line)
