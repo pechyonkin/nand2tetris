@@ -120,7 +120,7 @@ def parse_a_instruction(
     num_part = line[1:]
     if num_part.isnumeric():
         return AInstruction(address=num_part)
-    assert num_part in symbols_dict, "Symbol {num_part} not found in symbols!"
+    assert num_part in symbols_dict, f"Symbol {num_part} not found in symbols!"
     return AInstruction(address=str(symbols_dict[num_part]))
 
 

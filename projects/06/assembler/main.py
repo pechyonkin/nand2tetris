@@ -6,6 +6,7 @@ from assembler.parser import process_file
 FILES_TO_PROCESS = [
     "/Users/maxbrut/git/nand2tetris/projects/06/add/Add.asm",
     "/Users/maxbrut/git/nand2tetris/projects/06/pong/PongL.asm",
+    "/Users/maxbrut/git/nand2tetris/projects/06/pong/Pong.asm",
 ]
 
 PATHS_TO_PROCESS = [Path(f) for f in FILES_TO_PROCESS]
