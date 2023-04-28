@@ -5,7 +5,8 @@ from assembler.parser import process_file
 
 FILES_TO_PROCESS = [
     "/Users/maxbrut/git/nand2tetris/projects/06/add/Add.asm",
-    "/Users/maxbrut/git/nand2tetris/projects/06/pong/PongL.asm",
+    "/Users/maxbrut/git/nand2tetris/projects/06/max/Max.asm",
+    "/Users/maxbrut/git/nand2tetris/projects/06/rect/Rect.asm",
     "/Users/maxbrut/git/nand2tetris/projects/06/pong/Pong.asm",
 ]
 

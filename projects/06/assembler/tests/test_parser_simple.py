@@ -104,7 +104,7 @@ def test_process_lines():
     assert instr_lines == TEST_LINES_NO_SYMBOLS_1_EXP
 
 
-@pytest.mark.skip("Don't process files for now.")
+# @pytest.mark.skip("Don't process files for now.")
 def test_process_file():
     print("THIS! " * 42)
     for path in PATHS_TO_PROCESS:
