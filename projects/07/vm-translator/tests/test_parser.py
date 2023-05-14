@@ -1,11 +1,8 @@
 from pathlib import Path
 
 from translator.parser import load_vm_lines
-from main import PATHS_TO_PROCESS
 
-TEST_PATH_1 = Path(
-    "/Users/maxbrut/git/nand2tetris/projects/07/MemoryAccess/BasicTest/BasicTest.vm"
-)
+TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
 
 EXP_LINES_1 = [
     "push constant 10",

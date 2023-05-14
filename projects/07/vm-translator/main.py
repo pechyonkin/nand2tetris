@@ -10,7 +10,9 @@ def print_hi(name):
 
 
 PATHS_TO_PROCESS = (
-    "/Users/maxbrut/git/nand2tetris/projects/07/MemoryAccess/BasicTest/BasicTest.vm",
+    "../MemoryAccess/BasicTest/BasicTest.vm",
+    "../MemoryAccess/PointerTest/PointerTest.vm",
+    "../MemoryAccess/StaticTest/StaticTest.vm",
 )
 
 # Press the green button in the gutter to run the script.
