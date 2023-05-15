@@ -34,6 +34,8 @@ class VMCommand:
         self.segment: Optional[SegmentType] = self.get_segment_type()
 
     def get_segment_type(self) -> Optional[SegmentType]:
+        if self.type == VMCommandType.ARITHMETIC:
+            return None
         segment_str = self.command.split(" ")[1]
         if segment_str in SEGMENT_MAP:
             return SEGMENT_MAP[segment_str]
