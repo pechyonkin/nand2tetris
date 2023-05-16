@@ -26,6 +26,10 @@ def get_command_type(line: str) -> VMCommandType:
     raise ValueError(f"VM command '{line}' is not supported!")
 
 
+def get_vm_filename(path: Path) -> str:
+    return path.name
+
+
 class VMCommand:
     def __init__(self, line: str, vm_filename: str):
         self.type = get_command_type(line=line)

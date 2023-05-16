@@ -3,7 +3,12 @@ from pathlib import Path
 import pytest
 
 from translator.enums import VMCommandType, SegmentType
-from translator.parser import load_vm_lines, get_command_type, VMCommand
+from translator.parser import (
+    load_vm_lines,
+    get_command_type,
+    VMCommand,
+    get_vm_filename,
+)
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
 
@@ -74,3 +79,17 @@ def test_make_vm_command(
     assert command.type == exp_type
     assert command.segment == exp_segment
     assert command.command == line
+
+
+@pytest.mark.parametrize(
+    "path, exp_fname",
+    (
+        ("../MemoryAccess/BasicTest/BasicTest.vm", "BasicTest.vm"),
+        ("../MemoryAccess/PointerTest/PointerTest.vm", "PointerTest.vm"),
+        ("../MemoryAccess/StaticTest/StaticTest.vm", "StaticTest.vm"),
+    ),
+)
+def test_get_vm_filename(path: str, exp_fname: str) -> None:
+    path = Path(path)
+    fname = get_vm_filename(path=path)
+    assert fname == exp_fname
