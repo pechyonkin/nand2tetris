@@ -8,6 +8,7 @@ from translator.parser import (
     get_command_type,
     VMCommand,
     get_vm_filename,
+    load_vm_commands,
 )
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
@@ -93,3 +94,10 @@ def test_get_vm_filename(path: str, exp_fname: str) -> None:
     path = Path(path)
     fname = get_vm_filename(path=path)
     assert fname == exp_fname
+
+
+def test_lead_vm_commands(snapshot) -> None:
+    path = Path("../MemoryAccess/BasicTest/BasicTest.vm")
+    commands = load_vm_commands(path=path)
+    commands_str = [str(command) for command in commands]
+    snapshot.assert_match(commands_str)

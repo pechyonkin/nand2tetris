@@ -47,6 +47,14 @@ class VMCommand:
             msg = f"Segment '{segment_str}' is not in supported segments!"
             raise ValueError(msg)
 
+    def __str__(self):
+        segment = "None" if not self.segment else self.segment.name
+        str_repr = (
+            f"VMCommand('{self.command}', '{self.type.name}', "
+            f"'{segment}', '{self.vm_filename}')"
+        )
+        return str_repr
+
 
 def cleanse_lines(lines: List[str]) -> List[str]:
     out_lines = []
@@ -70,3 +78,10 @@ def load_vm_lines(path: Path) -> List[str]:
         raw_lines = f.readlines()
     clean_lines = cleanse_lines(lines=raw_lines)
     return clean_lines
+
+
+def load_vm_commands(path: Path) -> List[VMCommand]:
+    lines = load_vm_lines(path=path)
+    fname = get_vm_filename(path=path)
+    commands = [VMCommand(line=line, vm_filename=fname) for line in lines]
+    return commands
