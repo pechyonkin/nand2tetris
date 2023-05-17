@@ -77,21 +77,21 @@ def test_make_vm_command(
     exp_segment: SegmentType,
 ) -> None:
     command = VMCommand(line=line, vm_filename="Foo.vm")
-    assert command.type == exp_type
-    assert command.segment == exp_segment
+    assert command.command_type == exp_type
+    assert command.segment_type == exp_segment
     assert command.command == line
 
 
 @pytest.mark.parametrize(
-    "path, exp_fname",
+    "path_str, exp_fname",
     (
         ("../MemoryAccess/BasicTest/BasicTest.vm", "BasicTest.vm"),
         ("../MemoryAccess/PointerTest/PointerTest.vm", "PointerTest.vm"),
         ("../MemoryAccess/StaticTest/StaticTest.vm", "StaticTest.vm"),
     ),
 )
-def test_get_vm_filename(path: str, exp_fname: str) -> None:
-    path = Path(path)
+def test_get_vm_filename(path_str: str, exp_fname: str) -> None:
+    path = Path(path_str)
     fname = get_vm_filename(path=path)
     assert fname == exp_fname
 
@@ -101,3 +101,43 @@ def test_lead_vm_commands(snapshot) -> None:
     commands = load_vm_commands(path=path)
     commands_str = [str(command) for command in commands]
     snapshot.assert_match(commands_str)
+
+
+ASSEMBLY_PUSH_CONSTANT_17 = [
+    "@17",
+    "D = A",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
+ASSEMBLY_ADD = [
+    "@SP",
+    "A = M - 1",
+    "D = M",
+    "A = A - 1",
+    "M = M + D",
+    "D = A",
+    "@SP",
+    "M = D + 1",
+]
+
+
+def test_push_constant_assembly() -> None:
+    command = VMCommand(line="push constant 17", vm_filename="Foo.vm")
+    assembly = command.to_assembly()
+    assert assembly == ASSEMBLY_PUSH_CONSTANT_17
+
+
+def test_add_assembly() -> None:
+    command = VMCommand(line="add", vm_filename="Foo.vm")
+    assembly = command.to_assembly()
+    assert assembly == ASSEMBLY_ADD
+
+
+def test_not_implemented() -> None:
+    command = VMCommand(line="sub", vm_filename="Foo.vm")
+    with pytest.raises(NotImplementedError):
+        assembly = command.to_assembly()

@@ -1,6 +1,7 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Callable, Dict
 
+from translator.assemby import push_constant, add
 from translator.enums import VMCommandType, SegmentType, SEGMENT_MAP
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
@@ -14,6 +15,16 @@ SUPPORTED_ARITHMETIC_OPERATIONS = (
     "or",
     "not",
 )
+
+
+PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
+    SegmentType.CONSTANT: push_constant,
+}
+
+
+ARITHMETIC_FN_MAP: Dict[str, Callable[[], List[str]]] = {
+    "add": add,
+}
 
 
 def get_command_type(line: str) -> VMCommandType:
@@ -30,15 +41,19 @@ def get_vm_filename(path: Path) -> str:
     return path.name
 
 
+def get_value(line: str) -> str:
+    return line.split(" ")[-1]
+
+
 class VMCommand:
     def __init__(self, line: str, vm_filename: str):
-        self.type = get_command_type(line=line)
+        self.command_type = get_command_type(line=line)
         self.command = line
         self.vm_filename = vm_filename
-        self.segment: Optional[SegmentType] = self.get_segment_type()
+        self.segment_type: Optional[SegmentType] = self.get_segment_type()
 
     def get_segment_type(self) -> Optional[SegmentType]:
-        if self.type == VMCommandType.ARITHMETIC:
+        if self.command_type == VMCommandType.ARITHMETIC:
             return None
         segment_str = self.command.split(" ")[1]
         if segment_str in SEGMENT_MAP:
@@ -48,12 +63,28 @@ class VMCommand:
             raise ValueError(msg)
 
     def __str__(self):
-        segment = "None" if not self.segment else self.segment.name
+        segment = "None" if not self.segment_type else self.segment_type.name
         str_repr = (
-            f"VMCommand('{self.command}', '{self.type.name}', "
+            f"VMCommand('{self.command}', '{self.command_type.name}', "
             f"'{segment}', '{self.vm_filename}')"
         )
         return str_repr
+
+    def to_assembly(self) -> List[str]:
+        """Produce a list of assembly commands for this VM command."""
+        if (
+            self.command_type == VMCommandType.PUSH
+            and self.segment_type in PUSH_SEGMENT_FN_MAP
+        ):
+            push_value = get_value(self.command)
+            return PUSH_SEGMENT_FN_MAP[self.segment_type](push_value)
+        if (
+            self.command_type == VMCommandType.ARITHMETIC
+            and self.command in ARITHMETIC_FN_MAP
+        ):
+            return ARITHMETIC_FN_MAP[self.command]()
+        msg = f"Couldn't assemble VM Command '{self.__str__()}'"
+        raise NotImplementedError(msg)
 
 
 def cleanse_lines(lines: List[str]) -> List[str]:
