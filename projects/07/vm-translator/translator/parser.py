@@ -72,19 +72,23 @@ class VMCommand:
 
     def to_assembly(self) -> List[str]:
         """Produce a list of assembly commands for this VM command."""
+        result = [f"// {self.command}"]
         if (
             self.command_type == VMCommandType.PUSH
             and self.segment_type in PUSH_SEGMENT_FN_MAP
         ):
             push_value = get_value(self.command)
-            return PUSH_SEGMENT_FN_MAP[self.segment_type](push_value)
-        if (
+            assembly_lines = PUSH_SEGMENT_FN_MAP[self.segment_type](push_value)
+        elif (
             self.command_type == VMCommandType.ARITHMETIC
             and self.command in ARITHMETIC_FN_MAP
         ):
-            return ARITHMETIC_FN_MAP[self.command]()
-        msg = f"Couldn't assemble VM Command '{self.__str__()}'"
-        raise NotImplementedError(msg)
+            assembly_lines = ARITHMETIC_FN_MAP[self.command]()
+        else:
+            msg = f"Couldn't assemble VM Command '{self.__str__()}'"
+            raise NotImplementedError(msg)
+        result.extend(assembly_lines)
+        return result
 
 
 def cleanse_lines(lines: List[str]) -> List[str]:

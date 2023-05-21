@@ -12,6 +12,7 @@ from translator.parser import (
 )
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
+TEST_PATH_2 = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -104,6 +105,7 @@ def test_lead_vm_commands(snapshot) -> None:
 
 
 ASSEMBLY_PUSH_CONSTANT_17 = [
+    "// push constant 17",
     "@17",
     "D = A",
     "@SP",
@@ -114,6 +116,7 @@ ASSEMBLY_PUSH_CONSTANT_17 = [
 ]
 
 ASSEMBLY_ADD = [
+    "// add",
     "@SP",
     "A = M - 1",
     "D = M",
@@ -141,3 +144,8 @@ def test_not_implemented() -> None:
     command = VMCommand(line="sub", vm_filename="Foo.vm")
     with pytest.raises(NotImplementedError):
         assembly = command.to_assembly()
+
+
+def test_simple_add() -> None:
+    ...
+
