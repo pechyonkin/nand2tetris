@@ -1,8 +1,7 @@
 from pathlib import Path
-from pprint import pprint
 
 import pytest
-from snapshottest.pytest import PyTestSnapshotTest
+from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
 from translator.enums import VMCommandType, SegmentType
 from translator.parser import (
