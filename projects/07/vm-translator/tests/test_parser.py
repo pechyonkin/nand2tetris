@@ -11,6 +11,7 @@ from translator.parser import (
     get_vm_filename,
     load_vm_commands,
     get_assembly_lines,
+    process_file,
 )
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
@@ -151,3 +152,7 @@ def test_not_implemented() -> None:
 def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
     result = get_assembly_lines(path=SIMPLE_ADD_PATH)
     snapshot.assert_match(result)
+
+
+def test_outfile_simple_add() -> None:
+    process_file(path=SIMPLE_ADD_PATH)

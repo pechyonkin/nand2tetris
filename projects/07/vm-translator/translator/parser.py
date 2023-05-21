@@ -128,3 +128,20 @@ def get_assembly_lines(path: Path) -> List[str]:
     for vm_command in vm_commands:
         assembly_lines.extend(vm_command.to_assembly())
     return assembly_lines
+
+
+def get_output_path(path: Path) -> Path:
+    """Create output path in same directory with same name but .asm extension"""
+    file_dir = path.parent
+    fname_no_extension = path.stem
+    fname_asm = fname_no_extension + ".asm"
+    out_path = file_dir / fname_asm
+    return out_path
+
+
+def process_file(path: Path) -> None:
+    assembly_lines = get_assembly_lines(path=path)
+    assembly_lines = [line + "\n" for line in assembly_lines]
+    out_path = get_output_path(path=path)
+    with open(out_path, "w") as out_f:
+        out_f.writelines(assembly_lines)
