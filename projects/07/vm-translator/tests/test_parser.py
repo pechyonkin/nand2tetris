@@ -1,6 +1,8 @@
 from pathlib import Path
+from pprint import pprint
 
 import pytest
+from snapshottest.pytest import PyTestSnapshotTest
 
 from translator.enums import VMCommandType, SegmentType
 from translator.parser import (
@@ -9,10 +11,11 @@ from translator.parser import (
     VMCommand,
     get_vm_filename,
     load_vm_commands,
+    get_assembly_lines,
 )
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
-TEST_PATH_2 = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
+SIMPLE_ADD_PATH = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -97,7 +100,7 @@ def test_get_vm_filename(path_str: str, exp_fname: str) -> None:
     assert fname == exp_fname
 
 
-def test_lead_vm_commands(snapshot) -> None:
+def test_lead_vm_commands(snapshot: PyTestSnapshotTest) -> None:
     path = Path("../MemoryAccess/BasicTest/BasicTest.vm")
     commands = load_vm_commands(path=path)
     commands_str = [str(command) for command in commands]
@@ -146,6 +149,6 @@ def test_not_implemented() -> None:
         assembly = command.to_assembly()
 
 
-def test_simple_add() -> None:
-    ...
-
+def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
+    result = get_assembly_lines(path=SIMPLE_ADD_PATH)
+    snapshot.assert_match(result)

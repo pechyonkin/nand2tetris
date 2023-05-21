@@ -120,3 +120,11 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
     fname = get_vm_filename(path=path)
     commands = [VMCommand(line=line, vm_filename=fname) for line in lines]
     return commands
+
+
+def get_assembly_lines(path: Path) -> List[str]:
+    vm_commands = load_vm_commands(path=path)
+    assembly_lines = []
+    for vm_command in vm_commands:
+        assembly_lines.extend(vm_command.to_assembly())
+    return assembly_lines

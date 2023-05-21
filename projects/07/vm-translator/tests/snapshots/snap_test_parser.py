@@ -7,7 +7,7 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_lead_vm_commands 1"] = [
+snapshots['test_lead_vm_commands 1'] = [
     "VMCommand('push constant 10', 'PUSH', 'CONSTANT', 'BasicTest.vm')",
     "VMCommand('pop local 0', 'POP', 'LOCAL', 'BasicTest.vm')",
     "VMCommand('push constant 21', 'PUSH', 'CONSTANT', 'BasicTest.vm')",
@@ -32,5 +32,33 @@ snapshots["test_lead_vm_commands 1"] = [
     "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest.vm')",
     "VMCommand('sub', 'ARITHMETIC', 'None', 'BasicTest.vm')",
     "VMCommand('push temp 6', 'PUSH', 'TEMP', 'BasicTest.vm')",
-    "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest.vm')",
+    "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest.vm')"
+]
+
+snapshots['test_simple_add 1'] = [
+    '// push constant 7',
+    '@7',
+    'D = A',
+    '@SP',
+    'A = M',
+    'M = D',
+    '@SP',
+    'M = M + 1',
+    '// push constant 8',
+    '@8',
+    'D = A',
+    '@SP',
+    'A = M',
+    'M = D',
+    '@SP',
+    'M = M + 1',
+    '// add',
+    '@SP',
+    'A = M - 1',
+    'D = M',
+    'A = A - 1',
+    'M = M + D',
+    'D = A',
+    '@SP',
+    'M = D + 1'
 ]
