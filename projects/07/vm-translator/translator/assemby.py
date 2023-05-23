@@ -18,11 +18,11 @@ def pop_from_stack(store_in_d: bool = True) -> List[str]:
     """
     assembly = [
         "@SP",
-        "M=M-1",
-        "A=M",
+        "M = M - 1",
+        "A = M",
     ]
     if store_in_d:
-        assembly.append("D=M")
+        assembly.append("D = M")
     return assembly
 
 
