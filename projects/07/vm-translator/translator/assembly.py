@@ -58,13 +58,22 @@ def push_constant(value: str) -> List[str]:
     return assembly
 
 
+def arithmetic_op(operator: str) -> List[str]:
+    """Return assembly to perform binary arithmetic operation on D and M and
+    store result in D."""
+    assembly = [
+        f"D = M {operator} D",
+    ]
+    return assembly
+
+
 def add() -> List[str]:
     """Calculate A + B by pupping two operands from stack, performing addition,
     and pushing the result onto the stack."""
     assembly = (
         pop_from_stack(store_in_d=True)  # store first operand in D
         + pop_from_stack(store_in_d=False)  # point to second operand by A
-        + ["D = M + D"]  # add first and second operands, store in D
+        + arithmetic_op(operator="+")  # add 1st and 2nd operands, store in D
         + push_to_stack()  # push D onto stack
     )
     return assembly
