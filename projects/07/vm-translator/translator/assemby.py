@@ -60,19 +60,10 @@ def push_constant(value: str) -> List[str]:
 
 def add() -> List[str]:
     """Calculate A + B and put it in place of A."""
-    assembly: List[str] = [
-        # select register right before SP, where B is, and store B into D
-        "@SP",
-        "A = M - 1",
-        "D = M",
-        # select register SP-2, where A is stored
-        "A = A - 1",
-        # add B to A
-        "M = M + D",
-        # store memory location of A + B in register D
-        "D = A",
-        # update SP to point to next register after A + B
-        "@SP",
-        "M = D + 1",
-    ]
+    assembly = (
+        pop_from_stack(store_in_d=True)  # store first operand in D
+        + pop_from_stack(store_in_d=False)  # point to second operand by A
+        + ["D = M + D"]  # add first and second operands, store in D
+        + push_to_stack()  # push D onto stack
+    )
     return assembly

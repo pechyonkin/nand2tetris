@@ -120,14 +120,23 @@ ASSEMBLY_PUSH_CONSTANT_17 = [
 
 ASSEMBLY_ADD = [
     "// add",
+    # # store first operand in D
     "@SP",
-    "A = M - 1",
+    "M = M - 1",
+    "A = M",
     "D = M",
-    "A = A - 1",
-    "M = M + D",
-    "D = A",
+    # point to second operand by A
     "@SP",
-    "M = D + 1",
+    "M = M - 1",
+    "A = M",
+    # add first and second operands, store in D
+    "D = M + D",
+    # push D onto stack
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
 ]
 
 
