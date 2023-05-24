@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
-from translator.assemby import push_constant, add
+from translator.assembly import push_constant, add
 from translator.enums import VMCommandType, SegmentType, SEGMENT_MAP
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (

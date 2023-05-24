@@ -120,7 +120,7 @@ ASSEMBLY_PUSH_CONSTANT_17 = [
 
 ASSEMBLY_ADD = [
     "// add",
-    # # store first operand in D
+    # store first operand in D
     "@SP",
     "M = M - 1",
     "A = M",

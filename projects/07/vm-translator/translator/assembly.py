@@ -59,7 +59,8 @@ def push_constant(value: str) -> List[str]:
 
 
 def add() -> List[str]:
-    """Calculate A + B and put it in place of A."""
+    """Calculate A + B by pupping two operands from stack, performing addition,
+    and pushing the result onto the stack."""
     assembly = (
         pop_from_stack(store_in_d=True)  # store first operand in D
         + pop_from_stack(store_in_d=False)  # point to second operand by A
