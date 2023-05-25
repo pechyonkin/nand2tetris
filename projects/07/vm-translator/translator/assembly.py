@@ -72,7 +72,9 @@ def jump_op(
         f"{false_label}",
         "0; JMP",
         f"({true_label})",
-        "D = 1",
+        # True result should produce -1 (which is all 1s in 2's complement
+        # http://nand2tetris-questions-and-answers-forum.52.s1.nabble.com/Logical-operations-tp72625p73856.html
+        "D = -1",
         f"{false_label}",
     ]
     return asm

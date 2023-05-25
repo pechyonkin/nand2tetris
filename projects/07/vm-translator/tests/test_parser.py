@@ -169,7 +169,6 @@ def test_outfile_simple_add() -> None:
     process_file(path=SIMPLE_ADD_PATH)
 
 
-def test_eq() -> None:
+def test_eq(snapshot: PyTestSnapshotTest) -> None:
     result = eq(fname="Foo", line_num=0)
-    print("TEST RESULTS: ")
-    pprint(result)
+    snapshot.assert_match(result)

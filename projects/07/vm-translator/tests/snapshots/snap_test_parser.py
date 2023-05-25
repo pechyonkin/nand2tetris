@@ -7,6 +7,30 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots["test_eq 1"] = [
+    "@SP",
+    "M = M - 1",
+    "A = M",
+    "D = M",
+    "@SP",
+    "M = M - 1",
+    "A = M",
+    "D = M - D",
+    "@TRUE_THEN_JUMP.Foo.0",
+    "D; JEQ",
+    "D = 0",
+    "FALSE_THEN_DONT_JUMP.Foo.0",
+    "0; JMP",
+    "(TRUE_THEN_JUMP.Foo.0)",
+    "D = -1",
+    "FALSE_THEN_DONT_JUMP.Foo.0",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
 snapshots["test_lead_vm_commands 1"] = [
     "VMCommand('push constant 10', 'PUSH', 'CONSTANT', 'BasicTest.vm')",
     "VMCommand('pop local 0', 'POP', 'LOCAL', 'BasicTest.vm')",
