@@ -60,11 +60,11 @@ def push_constant(value: str) -> List[str]:
 
 def jump_op(
     jump_type: str,
-    line_number: int,
-    file_name: str,
+    line_num: int,
+    fname: str,
 ) -> List[str]:
-    true_label = f"TRUE_THEN_JUMP.{file_name}.{line_number}"
-    false_label = f"FALSE_THEN_DONT_JUMP.{file_name}.{line_number}"
+    true_label = f"TRUE_THEN_JUMP.{fname}.{line_num}"
+    false_label = f"FALSE_THEN_DONT_JUMP.{fname}.{line_num}"
     asm = [
         f"@{true_label}",
         f"D; {jump_type}",
@@ -80,6 +80,8 @@ def jump_op(
 
 def arithmetic_op(
     operator: str,
+    fname: str,
+    line_num: int,
     jump_type: Optional[str] = None,
 ) -> List[str]:
     """Return assembly to perform binary arithmetic operation on D and M and
@@ -92,23 +94,30 @@ def arithmetic_op(
     if jump_type:
         asm += jump_op(
             jump_type=jump_type,
-            # TODO move this into function arguments and remove '0' value
-            line_number=0,
-            # TODO move this into function arguments and remove 'TestFile' value
-            file_name="TestFile",
+            line_num=line_num,
+            fname=fname,
         )
     asm += push_to_stack()  # push D onto stack
     return asm
 
 
-def add() -> List[str]:
+def add(fname: str, line_num: int) -> List[str]:
     """Calculate A + B by pupping two operands from stack, performing addition,
     and pushing the result onto the stack."""
-    asm = arithmetic_op(operator="+")  # add 1st and 2nd operands, store in D
+    asm = arithmetic_op(
+        operator="+",
+        fname=fname,
+        line_num=line_num,
+    )  # add 1st and 2nd operands, store in D
     return asm
 
 
-def eq() -> List[str]:
+def eq(fname: str, line_num: int) -> List[str]:
     """Calculate A eq B and push 1 onto the stack if they are equal, and 0
     otherwise."""
-    return arithmetic_op(operator="-", jump_type="JEQ")
+    return arithmetic_op(
+        operator="-",
+        fname=fname,
+        line_num=line_num,
+        jump_type="JEQ",
+    )

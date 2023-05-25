@@ -144,20 +144,20 @@ ASSEMBLY_ADD = [
 
 def test_push_constant_assembly() -> None:
     command = VMCommand(line="push constant 17", vm_filename="Foo.vm")
-    assembly = command.to_assembly()
+    assembly = command.to_assembly(fname="Foo", line_num=0)
     assert assembly == ASSEMBLY_PUSH_CONSTANT_17
 
 
 def test_add_assembly() -> None:
     command = VMCommand(line="add", vm_filename="Foo.vm")
-    assembly = command.to_assembly()
+    assembly = command.to_assembly(fname="Foo", line_num=0)
     assert assembly == ASSEMBLY_ADD
 
 
 def test_not_implemented() -> None:
     command = VMCommand(line="sub", vm_filename="Foo.vm")
     with pytest.raises(NotImplementedError):
-        assembly = command.to_assembly()
+        assembly = command.to_assembly(fname="Foo", line_num=0)
 
 
 def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
@@ -170,6 +170,6 @@ def test_outfile_simple_add() -> None:
 
 
 def test_eq() -> None:
-    result = eq()
+    result = eq(fname="Foo", line_num=0)
     print("TEST RESULTS: ")
     pprint(result)

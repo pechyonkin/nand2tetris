@@ -22,7 +22,7 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
 }
 
 
-ARITHMETIC_FN_MAP: Dict[str, Callable[[], List[str]]] = {
+ARITHMETIC_FN_MAP: Dict[str, Callable[[str, int], List[str]]] = {
     "add": add,
 }
 
@@ -70,7 +70,7 @@ class VMCommand:
         )
         return str_repr
 
-    def to_assembly(self) -> List[str]:
+    def to_assembly(self, fname: str, line_num: int) -> List[str]:
         """Produce a list of assembly commands for this VM command."""
         result = [f"// {self.command}"]
         if (
@@ -83,7 +83,7 @@ class VMCommand:
             self.command_type == VMCommandType.ARITHMETIC
             and self.command in ARITHMETIC_FN_MAP
         ):
-            assembly_lines = ARITHMETIC_FN_MAP[self.command]()
+            assembly_lines = ARITHMETIC_FN_MAP[self.command](fname, line_num)
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
@@ -125,8 +125,14 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
 def get_assembly_lines(path: Path) -> List[str]:
     vm_commands = load_vm_commands(path=path)
     assembly_lines = []
-    for vm_command in vm_commands:
-        assembly_lines.extend(vm_command.to_assembly())
+    fname = path.stem
+    for line_number, vm_command in enumerate(vm_commands):
+        assembly_lines.extend(
+            vm_command.to_assembly(
+                fname=fname,
+                line_num=line_number,
+            )
+        )
     return assembly_lines
 
 
