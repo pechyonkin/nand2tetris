@@ -1,8 +1,10 @@
 from pathlib import Path
+from pprint import pprint
 
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
+from translator.assembly import eq
 from translator.enums import VMCommandType, SegmentType
 from translator.parser import (
     load_vm_lines,
@@ -165,3 +167,9 @@ def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
 
 def test_outfile_simple_add() -> None:
     process_file(path=SIMPLE_ADD_PATH)
+
+
+def test_eq() -> None:
+    result = eq()
+    print("TEST RESULTS: ")
+    pprint(result)
