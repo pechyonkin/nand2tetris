@@ -1,5 +1,4 @@
 from pathlib import Path
-from pprint import pprint
 
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
@@ -154,10 +153,11 @@ def test_add_assembly() -> None:
     assert assembly == ASSEMBLY_ADD
 
 
+@pytest.mark.skip("Everything is now implemented!")
 def test_not_implemented() -> None:
-    command = VMCommand(line="sub", vm_filename="Foo.vm")
+    command = VMCommand(line="not", vm_filename="Foo.vm")
     with pytest.raises(NotImplementedError):
-        assembly = command.to_assembly(fname="Foo", line_num=0)
+        _ = command.to_assembly(fname="Foo", line_num=0)
 
 
 def test_simple_add(snapshot: PyTestSnapshotTest) -> None:

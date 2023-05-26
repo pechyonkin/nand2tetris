@@ -103,6 +103,27 @@ def arithmetic_op(
     return asm
 
 
+def unary_arithmetic_op(
+    operator: str,
+) -> List[str]:
+    """Return assembly to perform unary arithmetic operation on D and store
+    result in D."""
+    asm = (
+        pop_from_stack(store_in_d=True)  # store the operand in D
+        + [f"D = {operator} D"]  # perform the operation
+        + push_to_stack()  # push D onto stack
+    )
+    return asm
+
+
+def not_op(fname: str, line_num: int) -> List[str]:
+    return unary_arithmetic_op(operator="!")
+
+
+def neg_op(fname: str, line_num: int) -> List[str]:
+    return unary_arithmetic_op(operator="-")
+
+
 def add(fname: str, line_num: int) -> List[str]:
     """Calculate A + B by pupping two operands from stack, performing addition,
     and pushing the result onto the stack."""
