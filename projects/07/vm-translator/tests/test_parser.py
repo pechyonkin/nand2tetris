@@ -17,6 +17,7 @@ from translator.parser import (
 
 TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
 SIMPLE_ADD_PATH = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
+STACK_TEST_PATH = Path("../StackArithmetic/StackTest/StackTest.vm")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -101,7 +102,7 @@ def test_get_vm_filename(path_str: str, exp_fname: str) -> None:
     assert fname == exp_fname
 
 
-def test_lead_vm_commands(snapshot: PyTestSnapshotTest) -> None:
+def test_load_vm_commands(snapshot: PyTestSnapshotTest) -> None:
     path = Path("../MemoryAccess/BasicTest/BasicTest.vm")
     commands = load_vm_commands(path=path)
     commands_str = [str(command) for command in commands]
@@ -165,8 +166,15 @@ def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
     snapshot.assert_match(result)
 
 
-def test_outfile_simple_add() -> None:
-    process_file(path=SIMPLE_ADD_PATH)
+@pytest.mark.parametrize(
+    "path",
+    (
+        SIMPLE_ADD_PATH,
+        STACK_TEST_PATH,
+    ),
+)
+def test_outfile_simple_add(path: Path) -> None:
+    process_file(path=path)
 
 
 def test_eq(snapshot: PyTestSnapshotTest) -> None:

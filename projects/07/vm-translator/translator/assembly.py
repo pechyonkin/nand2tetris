@@ -69,13 +69,13 @@ def jump_op(
         f"@{true_label}",
         f"D; {jump_type}",
         "D = 0",
-        f"{false_label}",
+        f"@{false_label}",
         "0; JMP",
         f"({true_label})",
         # True result should produce -1 (which is all 1s in 2's complement
         # http://nand2tetris-questions-and-answers-forum.52.s1.nabble.com/Logical-operations-tp72625p73856.html
         "D = -1",
-        f"{false_label}",
+        f"({false_label})",
     ]
     return asm
 
@@ -151,6 +151,16 @@ def or_op(fname: str, line_num: int) -> List[str]:
     bitwise or, and pushing the result onto the stack."""
     return arithmetic_op(
         operator="|",
+        fname=fname,
+        line_num=line_num,
+    )
+
+
+def and_op(fname: str, line_num: int) -> List[str]:
+    """Calculate bitwise A and B by pupping two operands from stack, performing
+    bitwise or, and pushing the result onto the stack."""
+    return arithmetic_op(
+        operator="&",
         fname=fname,
         line_num=line_num,
     )

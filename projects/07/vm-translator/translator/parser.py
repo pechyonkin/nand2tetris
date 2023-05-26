@@ -11,6 +11,7 @@ from translator.assembly import (
     or_op,
     not_op,
     neg_op,
+    and_op,
 )
 from translator.enums import VMCommandType, SegmentType, SEGMENT_MAP
 
@@ -41,6 +42,7 @@ ARITHMETIC_FN_MAP: Dict[str, Callable[[str, int], List[str]]] = {
     "or": or_op,
     "not": not_op,
     "neg": neg_op,
+    "and": and_op,
 }
 
 
