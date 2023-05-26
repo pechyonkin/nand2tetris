@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
-from translator.assembly import push_constant, add
+from translator.assembly import push_constant, add, eq, lt, gt, sub, or_op
 from translator.enums import VMCommandType, SegmentType, SEGMENT_MAP
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
@@ -24,6 +24,11 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
 
 ARITHMETIC_FN_MAP: Dict[str, Callable[[str, int], List[str]]] = {
     "add": add,
+    "eq": eq,
+    "lt": lt,
+    "gt": gt,
+    "sub": sub,
+    "or": or_op,
 }
 
 
