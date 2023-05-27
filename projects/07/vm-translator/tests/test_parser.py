@@ -161,8 +161,19 @@ def test_not_implemented() -> None:
         _ = command.to_assembly(fname="Foo", line_num=0)
 
 
-def test_simple_add(snapshot: PyTestSnapshotTest) -> None:
-    result = get_assembly_lines(path=SIMPLE_ADD_PATH)
+@pytest.mark.parametrize(
+    "path",
+    (
+        SIMPLE_ADD_PATH,
+        STACK_TEST_PATH,
+    ),
+)
+def test_stack_arithmetic(
+    path: Path,
+    snapshot: PyTestSnapshotTest,
+) -> None:
+    """Test the two StackArithmetic .vm files."""
+    result = get_assembly_lines(path=path)
     snapshot.assert_match(result)
 
 
