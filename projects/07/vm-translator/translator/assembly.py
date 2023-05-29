@@ -61,7 +61,8 @@ def push_constant(value: str) -> List[str]:
 
 
 def push_offset(segment_type: SegmentType, index: str) -> List[str]:
-    """Implement assembly for `push <segment> i`.
+    """Implement assembly for `push <segment> i` where `i` represents an offset
+    from the segment's base address stored at @segment_label in RAM.
 
     Where <segment> is one of ("local", "argument", "this", "that")
 
