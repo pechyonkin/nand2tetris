@@ -19,7 +19,7 @@ class SegmentType(Enum):
     TEMP = 8
 
 
-SEGMENT_MAP = {
+SEGMENT_TO_TYPE_MAP = {
     "local": SegmentType.LOCAL,
     "argument": SegmentType.ARGUMENT,
     "this": SegmentType.THIS,
@@ -28,4 +28,23 @@ SEGMENT_MAP = {
     "static": SegmentType.STATIC,
     "pointer": SegmentType.POINTER,
     "temp": SegmentType.TEMP,
+}
+
+# .values() and .keys() are returned in insertion order, so this correctly
+# reverses the map from (key: value) to (value: key)
+# https://docs.python.org/3/library/stdtypes.html#dictionary-view-objects
+TYPE_TO_SEGMENT_MAP = dict(
+    zip(SEGMENT_TO_TYPE_MAP.values(), SEGMENT_TO_TYPE_MAP.keys())
+)
+
+
+SEGMENT_TYPE_TO_LABEL_MAP = {
+    SegmentType.LOCAL: "LCL",
+    SegmentType.ARGUMENT: "ARG",
+    SegmentType.THIS: "THIS",
+    SegmentType.THAT: "THAT",
+    # SegmentType.CONSTANT: "",
+    # SegmentType.STATIC: "",
+    # SegmentType.POINTER: "",
+    # SegmentType.TEMP: "",
 }

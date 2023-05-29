@@ -59,6 +59,58 @@ snapshots["test_load_vm_commands 1"] = [
     "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest.vm')",
 ]
 
+snapshots["test_push_offset[SegmentType.ARGUMENT-1] 1"] = [
+    "@1",
+    "D = A",
+    "@ARG",
+    "AD = D + M",
+    "D = M",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
+snapshots["test_push_offset[SegmentType.LOCAL-42] 1"] = [
+    "@42",
+    "D = A",
+    "@LCL",
+    "AD = D + M",
+    "D = M",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
+snapshots["test_push_offset[SegmentType.THAT-69] 1"] = [
+    "@69",
+    "D = A",
+    "@THAT",
+    "AD = D + M",
+    "D = M",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
+snapshots["test_push_offset[SegmentType.THIS-9] 1"] = [
+    "@9",
+    "D = A",
+    "@THIS",
+    "AD = D + M",
+    "D = M",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
 snapshots["test_stack_arithmetic[path0] 1"] = [
     "// push constant 7",
     "@7",

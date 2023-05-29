@@ -13,7 +13,7 @@ from translator.assembly import (
     neg_op,
     and_op,
 )
-from translator.enums import VMCommandType, SegmentType, SEGMENT_MAP
+from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
     "add",
@@ -75,8 +75,8 @@ class VMCommand:
         if self.command_type == VMCommandType.ARITHMETIC:
             return None
         segment_str = self.command.split(" ")[1]
-        if segment_str in SEGMENT_MAP:
-            return SEGMENT_MAP[segment_str]
+        if segment_str in SEGMENT_TO_TYPE_MAP:
+            return SEGMENT_TO_TYPE_MAP[segment_str]
         else:
             msg = f"Segment '{segment_str}' is not in supported segments!"
             raise ValueError(msg)

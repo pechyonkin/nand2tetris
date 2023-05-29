@@ -3,6 +3,8 @@ Methods for converting VM code to assembly instructions.
 """
 from typing import List, Optional
 
+from translator.enums import SegmentType, SEGMENT_TYPE_TO_LABEL_MAP
+
 
 def pop_from_stack(store_in_d: bool = True) -> List[str]:
     """Return assembly to pop the value from top of stack and optionally store
@@ -55,6 +57,37 @@ def push_constant(value: str) -> List[str]:
         "@SP",
         "M = M + 1",
     ]
+    return asm
+
+
+def push_offset(segment_type: SegmentType, index: str) -> List[str]:
+    """Implement assembly for `push <segment> i`.
+
+    Where <segment> is one of ("local", "argument", "this", "that")
+
+    Take value at index i in <segment> and push it onto the stack.
+
+    :param segment_type: only LOCAL, ARGUMENT, THIS, THAT are supported
+    :param index: index at which to get the value from the segment
+    :return: list of assembly lines to achieve this operation
+    """
+    msg = f"Segment type {segment_type.name} is not supported!"
+    assert segment_type in (
+        SegmentType.LOCAL,
+        SegmentType.ARGUMENT,
+        SegmentType.THIS,
+        SegmentType.THAT,
+    ), msg
+
+    segment = SEGMENT_TYPE_TO_LABEL_MAP[segment_type]
+
+    asm = [
+        f"@{index}",
+        "D = A",  # store i in D
+        f"@{segment}",
+        "AD = D + M",  # calculate addr = <segment> + i and select that address
+        "D = M",  # store value from the selected address in D
+    ] + push_to_stack()  # push the value in D onto stack and increment SP
     return asm
 
 

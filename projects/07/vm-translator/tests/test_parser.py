@@ -3,8 +3,8 @@ from pathlib import Path
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
-from translator.assembly import eq
-from translator.enums import VMCommandType, SegmentType
+from translator.assembly import eq, push_offset
+from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
 from translator.parser import (
     load_vm_lines,
     get_command_type,
@@ -191,3 +191,51 @@ def test_outfile_simple_add(path: Path) -> None:
 def test_eq(snapshot: PyTestSnapshotTest) -> None:
     result = eq(fname="Foo", line_num=0)
     snapshot.assert_match(result)
+
+
+def test_type_to_segment_map():
+    """Test that map was reversed correctly."""
+    assert TYPE_TO_SEGMENT_MAP == {
+        SegmentType.LOCAL: "local",
+        SegmentType.ARGUMENT: "argument",
+        SegmentType.THIS: "this",
+        SegmentType.THAT: "that",
+        SegmentType.CONSTANT: "constant",
+        SegmentType.STATIC: "static",
+        SegmentType.POINTER: "pointer",
+        SegmentType.TEMP: "temp",
+    }
+
+
+@pytest.mark.parametrize(
+    "segment_type,index",
+    (
+        (SegmentType.LOCAL, "42"),
+        (SegmentType.ARGUMENT, "1"),
+        (SegmentType.THIS, "9"),
+        (SegmentType.THAT, "69"),
+    ),
+)
+def test_push_offset(
+    segment_type: SegmentType,
+    index: str,
+    snapshot: PyTestSnapshotTest,
+) -> None:
+    snapshot.assert_match(push_offset(segment_type=segment_type, index=index))
+
+
+@pytest.mark.parametrize(
+    "segment_type,index",
+    (
+        (SegmentType.CONSTANT, "42"),
+        (SegmentType.STATIC, "1"),
+        (SegmentType.POINTER, "9"),
+        (SegmentType.TEMP, "69"),
+    ),
+)
+def test_push_offset_fails(
+    segment_type: SegmentType,
+    index: str,
+) -> None:
+    with pytest.raises(AssertionError):
+        push_offset(segment_type=segment_type, index=index)
