@@ -60,6 +60,17 @@ def push_constant(value: str) -> List[str]:
     return asm
 
 
+def validate_offset_segment(segment_type: SegmentType) -> None:
+    """Validate segment type is one of supported segments, raise otherwise."""
+    msg = f"Segment type {segment_type.name} is not supported!"
+    assert segment_type in (
+        SegmentType.LOCAL,
+        SegmentType.ARGUMENT,
+        SegmentType.THIS,
+        SegmentType.THAT,
+    ), msg
+
+
 def push_offset(segment_type: SegmentType, index: str) -> List[str]:
     """Implement assembly for `push <segment> i` where `i` represents an offset
     from the segment's base address stored at @segment_label in RAM.
@@ -72,16 +83,8 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
     :param index: index at which to get the value from the segment
     :return: list of assembly lines to achieve this operation
     """
-    msg = f"Segment type {segment_type.name} is not supported!"
-    assert segment_type in (
-        SegmentType.LOCAL,
-        SegmentType.ARGUMENT,
-        SegmentType.THIS,
-        SegmentType.THAT,
-    ), msg
-
+    validate_offset_segment(segment_type=segment_type)
     segment = SEGMENT_TYPE_TO_LABEL_MAP[segment_type]
-
     asm = [
         f"@{index}",
         "D = A",  # store i in D
@@ -89,6 +92,38 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
         "AD = D + M",  # calculate addr = <segment> + i and select that address
         "D = M",  # store value from the selected address in D
     ] + push_to_stack()  # push the value in D onto stack and increment SP
+    return asm
+
+
+def pop_offset(segment_type: SegmentType, index: str) -> List[str]:
+    """Implement assembly for `pop <segment> i` where `i` represents an offset
+    from the segment's base address stored at @segment_label in RAM.
+
+    Where <segment> is one of ("local", "argument", "this", "that")
+
+    Pop value from the stack and store it at index i in <segment>.
+
+    :param segment_type: only LOCAL, ARGUMENT, THIS, THAT are supported
+    :param index: index at which to get the value from the segment
+    :return: list of assembly lines to achieve this operation
+    """
+    validate_offset_segment(segment_type=segment_type)
+    segment = SEGMENT_TYPE_TO_LABEL_MAP[segment_type]
+    asm = pop_from_stack() + [  # stores popped value in D
+        "@13",
+        "M = D",  # store popped value in R13
+        f"@{index}",
+        "D = A",  # store i in D
+        f"@{segment}",
+        "AD = D + M",  # calculate target address = <segment> + i
+        "@14",
+        "M = D",  # store target address in R14
+        "@13",
+        "D = M",  # load popped value from R13 into D
+        "@14",
+        "A = M",  # select target address stored in R14
+        "M = D",  # load popped value from D into the selected address
+    ]
     return asm
 
 

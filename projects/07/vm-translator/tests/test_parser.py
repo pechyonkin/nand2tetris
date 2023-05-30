@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
-from translator.assembly import eq, push_offset
+from translator.assembly import eq, push_offset, pop_offset
 from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
 from translator.parser import (
     load_vm_lines,
@@ -239,3 +239,37 @@ def test_push_offset_fails(
 ) -> None:
     with pytest.raises(AssertionError):
         push_offset(segment_type=segment_type, index=index)
+
+
+@pytest.mark.parametrize(
+    "segment_type,index",
+    (
+        (SegmentType.LOCAL, "42"),
+        (SegmentType.ARGUMENT, "1"),
+        (SegmentType.THIS, "9"),
+        (SegmentType.THAT, "69"),
+    ),
+)
+def test_pop_offset(
+    segment_type: SegmentType,
+    index: str,
+    snapshot: PyTestSnapshotTest,
+) -> None:
+    snapshot.assert_match(pop_offset(segment_type=segment_type, index=index))
+
+
+@pytest.mark.parametrize(
+    "segment_type,index",
+    (
+        (SegmentType.CONSTANT, "42"),
+        (SegmentType.STATIC, "1"),
+        (SegmentType.POINTER, "9"),
+        (SegmentType.TEMP, "69"),
+    ),
+)
+def test_pop_offset_fails(
+    segment_type: SegmentType,
+    index: str,
+) -> None:
+    with pytest.raises(AssertionError):
+        pop_offset(segment_type=segment_type, index=index)
