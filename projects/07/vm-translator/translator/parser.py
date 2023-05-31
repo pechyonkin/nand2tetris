@@ -1,3 +1,4 @@
+from functools import partial
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
@@ -12,6 +13,8 @@ from translator.assembly import (
     not_op,
     neg_op,
     and_op,
+    push_offset,
+    pop_offset,
 )
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
 
@@ -30,6 +33,18 @@ SUPPORTED_ARITHMETIC_OPERATIONS = (
 
 PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
     SegmentType.CONSTANT: push_constant,
+    SegmentType.LOCAL: partial(push_offset, SegmentType.LOCAL),
+    SegmentType.ARGUMENT: partial(push_offset, SegmentType.ARGUMENT),
+    SegmentType.THIS: partial(push_offset, SegmentType.THIS),
+    SegmentType.THAT: partial(push_offset, SegmentType.THAT),
+}
+
+
+POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
+    SegmentType.LOCAL: partial(pop_offset, SegmentType.LOCAL),
+    SegmentType.ARGUMENT: partial(pop_offset, SegmentType.ARGUMENT),
+    SegmentType.THIS: partial(pop_offset, SegmentType.THIS),
+    SegmentType.THAT: partial(pop_offset, SegmentType.THAT),
 }
 
 
@@ -99,6 +114,12 @@ class VMCommand:
             push_value = get_value(self.command)
             assembly_lines = PUSH_SEGMENT_FN_MAP[self.segment_type](push_value)
         elif (
+            self.command_type == VMCommandType.POP
+            and self.segment_type in POP_SEGMENT_FN_MAP
+        ):
+            pop_value = get_value(self.command)
+            assembly_lines = POP_SEGMENT_FN_MAP[self.segment_type](pop_value)
+        elif (
             self.command_type == VMCommandType.ARITHMETIC
             and self.command in ARITHMETIC_FN_MAP
         ):
@@ -141,10 +162,11 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
     return commands
 
 
-def get_assembly_lines(path: Path) -> List[str]:
-    vm_commands = load_vm_commands(path=path)
+def vm_commands_to_assembly(
+    vm_commands: List[VMCommand],
+    fname: str,
+) -> List[str]:
     assembly_lines = []
-    fname = path.stem
     for line_number, vm_command in enumerate(vm_commands):
         assembly_lines.extend(
             vm_command.to_assembly(
@@ -153,6 +175,13 @@ def get_assembly_lines(path: Path) -> List[str]:
             )
         )
     return assembly_lines
+
+
+def get_assembly_lines(path: Path) -> List[str]:
+    vm_commands = load_vm_commands(path=path)
+    fname = path.stem
+    asm = vm_commands_to_assembly(vm_commands=vm_commands, fname=fname)
+    return asm
 
 
 def get_output_path(path: Path) -> Path:

@@ -13,11 +13,14 @@ from translator.parser import (
     load_vm_commands,
     get_assembly_lines,
     process_file,
+    vm_commands_to_assembly,
 )
 
-TEST_PATH_1 = Path("../MemoryAccess/BasicTest/BasicTest.vm")
 SIMPLE_ADD_PATH = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
 STACK_TEST_PATH = Path("../StackArithmetic/StackTest/StackTest.vm")
+BASIC_TEST_PATH = Path("../MemoryAccess/BasicTest/BasicTest.vm")
+POINTER_TEST_PATH = Path("../MemoryAccess/PointerTest/PointerTest.vm")
+STATIC_TEST_PATH = Path("../MemoryAccess/StaticTest/StaticTest.vm")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -49,7 +52,7 @@ EXP_LINES_1 = [
 
 
 def test_load_vm_lines() -> None:
-    lines = load_vm_lines(path=TEST_PATH_1)
+    lines = load_vm_lines(path=BASIC_TEST_PATH)
     assert lines == EXP_LINES_1
 
 
@@ -273,3 +276,34 @@ def test_pop_offset_fails(
 ) -> None:
     with pytest.raises(AssertionError):
         pop_offset(segment_type=segment_type, index=index)
+
+
+@pytest.mark.parametrize(
+    "path",
+    (
+        BASIC_TEST_PATH,
+        POINTER_TEST_PATH,
+        STATIC_TEST_PATH,
+    ),
+)
+def test_to_assembly_with_offset(path: Path):
+    """Test assembly generation passes for all lines except lines related to
+    segments static, pointer and temp."""
+    vm_lines = load_vm_commands(path=path)
+    unsupported_segments = [
+        SegmentType.STATIC,
+        SegmentType.POINTER,
+        SegmentType.TEMP,
+    ]
+    vm_lines = [
+        vm_line
+        for vm_line in vm_lines
+        if (
+            (vm_line.command_type in [VMCommandType.PUSH, VMCommandType.POP])
+            and (vm_line.segment_type not in unsupported_segments)
+        )
+    ]
+    _ = vm_commands_to_assembly(
+        vm_commands=vm_lines,
+        fname=path.stem,
+    )
