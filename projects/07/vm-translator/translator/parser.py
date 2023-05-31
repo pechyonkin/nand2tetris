@@ -2,7 +2,13 @@ from functools import partial
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
-from translator.memory_segments import push_constant, push_offset, pop_offset
+from translator.memory_segments import (
+    push_constant,
+    push_offset,
+    pop_offset,
+    push_static,
+    pop_static,
+)
 from translator.arithmetic_ops import (
     not_op,
     neg_op,
@@ -36,6 +42,7 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.THIS: partial(push_offset, SegmentType.THIS),
     SegmentType.THAT: partial(push_offset, SegmentType.THAT),
     SegmentType.TEMP: partial(push_offset, SegmentType.TEMP),
+    SegmentType.STATIC: push_static,
 }
 
 
@@ -45,6 +52,7 @@ POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.THIS: partial(pop_offset, SegmentType.THIS),
     SegmentType.THAT: partial(pop_offset, SegmentType.THAT),
     SegmentType.TEMP: partial(pop_offset, SegmentType.TEMP),
+    SegmentType.STATIC: pop_static,
 }
 
 
@@ -72,7 +80,7 @@ def get_command_type(line: str) -> VMCommandType:
 
 
 def get_vm_filename(path: Path) -> str:
-    return path.name
+    return path.stem
 
 
 def get_value(line: str) -> str:
@@ -104,8 +112,9 @@ class VMCommand:
         )
         return str_repr
 
-    def to_assembly(self, fname: str, line_num: int) -> List[str]:
+    def to_assembly(self, line_num: int) -> List[str]:
         """Produce a list of assembly commands for this VM command."""
+        fname = self.vm_filename
         result = [f"// {self.command}"]
         if (
             self.command_type == VMCommandType.PUSH
@@ -168,13 +177,11 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
 
 def vm_commands_to_assembly(
     vm_commands: List[VMCommand],
-    fname: str,
 ) -> List[str]:
     assembly_lines = []
     for line_number, vm_command in enumerate(vm_commands):
         assembly_lines.extend(
             vm_command.to_assembly(
-                fname=fname,
                 line_num=line_number,
             )
         )
@@ -183,8 +190,7 @@ def vm_commands_to_assembly(
 
 def get_assembly_lines(path: Path) -> List[str]:
     vm_commands = load_vm_commands(path=path)
-    fname = path.stem
-    asm = vm_commands_to_assembly(vm_commands=vm_commands, fname=fname)
+    asm = vm_commands_to_assembly(vm_commands=vm_commands)
     return asm
 
 

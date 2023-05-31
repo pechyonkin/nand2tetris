@@ -112,3 +112,21 @@ def pop_offset(
         "M = D",  # load popped value from D into the selected address
     ]
     return asm
+
+
+def push_static(index: str, fname: str, line_num: int) -> List[str]:
+    del line_num  # unused
+    asm = [
+        f"@{fname}.{index}",
+        "D = M",
+    ] + push_to_stack()
+    return asm
+
+
+def pop_static(index: str, fname: str, line_num: int) -> List[str]:
+    del line_num  # unused
+    asm = pop_from_stack() + [  # pop from stack and store in D
+        f"@{fname}.{index}",
+        "M = D",
+    ]
+    return asm

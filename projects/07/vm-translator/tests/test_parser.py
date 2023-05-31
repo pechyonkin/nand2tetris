@@ -20,8 +20,8 @@ from translator.parser import (
 SIMPLE_ADD_PATH = Path("../StackArithmetic/SimpleAdd/SimpleAdd.vm")
 STACK_TEST_PATH = Path("../StackArithmetic/StackTest/StackTest.vm")
 BASIC_TEST_PATH = Path("../MemoryAccess/BasicTest/BasicTest.vm")
-POINTER_TEST_PATH = Path("../MemoryAccess/PointerTest/PointerTest.vm")
 STATIC_TEST_PATH = Path("../MemoryAccess/StaticTest/StaticTest.vm")
+POINTER_TEST_PATH = Path("../MemoryAccess/PointerTest/PointerTest.vm")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -95,9 +95,9 @@ def test_make_vm_command(
 @pytest.mark.parametrize(
     "path_str, exp_fname",
     (
-        ("../MemoryAccess/BasicTest/BasicTest.vm", "BasicTest.vm"),
-        ("../MemoryAccess/PointerTest/PointerTest.vm", "PointerTest.vm"),
-        ("../MemoryAccess/StaticTest/StaticTest.vm", "StaticTest.vm"),
+        ("../MemoryAccess/BasicTest/BasicTest.vm", "BasicTest"),
+        ("../MemoryAccess/PointerTest/PointerTest.vm", "PointerTest"),
+        ("../MemoryAccess/StaticTest/StaticTest.vm", "StaticTest"),
     ),
 )
 def test_get_vm_filename(path_str: str, exp_fname: str) -> None:
@@ -148,13 +148,13 @@ ASSEMBLY_ADD = [
 
 def test_push_constant_assembly() -> None:
     command = VMCommand(line="push constant 17", vm_filename="Foo.vm")
-    assembly = command.to_assembly(fname="Foo", line_num=0)
+    assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_PUSH_CONSTANT_17
 
 
 def test_add_assembly() -> None:
     command = VMCommand(line="add", vm_filename="Foo.vm")
-    assembly = command.to_assembly(fname="Foo", line_num=0)
+    assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_ADD
 
 
@@ -162,7 +162,7 @@ def test_add_assembly() -> None:
 def test_not_implemented() -> None:
     command = VMCommand(line="not", vm_filename="Foo.vm")
     with pytest.raises(NotImplementedError):
-        _ = command.to_assembly(fname="Foo", line_num=0)
+        _ = command.to_assembly(line_num=0)
 
 
 @pytest.mark.parametrize(
@@ -179,18 +179,6 @@ def test_stack_arithmetic(
     """Test the two StackArithmetic .vm files."""
     result = get_assembly_lines(path=path)
     snapshot.assert_match(result)
-
-
-@pytest.mark.parametrize(
-    "path",
-    (
-        SIMPLE_ADD_PATH,
-        STACK_TEST_PATH,
-        BASIC_TEST_PATH,
-    ),
-)
-def test_outfile_simple_add(path: Path) -> None:
-    process_file(path=path)
 
 
 def test_eq(snapshot: PyTestSnapshotTest) -> None:
@@ -317,7 +305,6 @@ def test_to_assembly_with_offset(path: Path):
     segments static, pointer and temp."""
     vm_lines = load_vm_commands(path=path)
     unsupported_segments = [
-        SegmentType.STATIC,
         SegmentType.POINTER,
     ]
     vm_lines = [
@@ -328,7 +315,26 @@ def test_to_assembly_with_offset(path: Path):
             and (vm_line.segment_type not in unsupported_segments)
         )
     ]
-    _ = vm_commands_to_assembly(
-        vm_commands=vm_lines,
-        fname=path.stem,
-    )
+    _ = vm_commands_to_assembly(vm_commands=vm_lines)
+
+
+def test_static(snapshot: PyTestSnapshotTest) -> None:
+    vm_lines = [
+        VMCommand("push static 42", "Foo"),
+        VMCommand("pop static 69", "Foo"),
+    ]
+    asm = vm_commands_to_assembly(vm_commands=vm_lines)
+    snapshot.assert_match(asm)
+
+
+@pytest.mark.parametrize(
+    "path",
+    (
+        SIMPLE_ADD_PATH,
+        STACK_TEST_PATH,
+        BASIC_TEST_PATH,
+        STATIC_TEST_PATH,
+    ),
+)
+def test_outfile_simple_add(path: Path) -> None:
+    process_file(path=path)
