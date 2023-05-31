@@ -185,6 +185,7 @@ def test_stack_arithmetic(
     (
         SIMPLE_ADD_PATH,
         STACK_TEST_PATH,
+        BASIC_TEST_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:

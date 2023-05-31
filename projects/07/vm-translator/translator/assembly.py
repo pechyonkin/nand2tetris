@@ -93,7 +93,8 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
         f"@{index}",
         "D = A",  # store i in D
         f"@{segment}",
-        "AD = D + M",  # calculate addr = <segment> + i and select that address
+        # calculate target address = <segment> + i and select that address
+        f"AD = D + {'A' if segment_type == SegmentType.TEMP else 'M'}",
         "D = M",  # store value from the selected address in D
     ] + push_to_stack()  # push the value in D onto stack and increment SP
     return asm
@@ -119,7 +120,8 @@ def pop_offset(segment_type: SegmentType, index: str) -> List[str]:
         f"@{index}",
         "D = A",  # store i in D
         f"@{segment}",
-        "AD = D + M",  # calculate target address = <segment> + i
+        # calculate target address = <segment> + i
+        f"AD = D + {'A' if segment_type == SegmentType.TEMP else 'M'}",
         "@14",
         "M = D",  # store target address in R14
         "@13",
