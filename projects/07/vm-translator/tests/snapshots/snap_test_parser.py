@@ -99,6 +99,26 @@ snapshots["test_pop_offset[SegmentType.LOCAL-42] 1"] = [
     "M = D",
 ]
 
+snapshots["test_pop_offset[SegmentType.TEMP-69] 1"] = [
+    "@SP",
+    "M = M - 1",
+    "A = M",
+    "D = M",
+    "@13",
+    "M = D",
+    "@69",
+    "D = A",
+    "@5",
+    "AD = D + M",
+    "@14",
+    "M = D",
+    "@13",
+    "D = M",
+    "@14",
+    "A = M",
+    "M = D",
+]
+
 snapshots["test_pop_offset[SegmentType.THAT-69] 1"] = [
     "@SP",
     "M = M - 1",
@@ -156,6 +176,19 @@ snapshots["test_push_offset[SegmentType.LOCAL-42] 1"] = [
     "@42",
     "D = A",
     "@LCL",
+    "AD = D + M",
+    "D = M",
+    "@SP",
+    "A = M",
+    "M = D",
+    "@SP",
+    "M = M + 1",
+]
+
+snapshots["test_push_offset[SegmentType.TEMP-69] 1"] = [
+    "@69",
+    "D = A",
+    "@5",
     "AD = D + M",
     "D = M",
     "@SP",

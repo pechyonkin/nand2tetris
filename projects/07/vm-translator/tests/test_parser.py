@@ -217,6 +217,7 @@ def test_type_to_segment_map():
         (SegmentType.ARGUMENT, "1"),
         (SegmentType.THIS, "9"),
         (SegmentType.THAT, "69"),
+        (SegmentType.TEMP, "69"),
     ),
 )
 def test_push_offset(
@@ -233,7 +234,6 @@ def test_push_offset(
         (SegmentType.CONSTANT, "42"),
         (SegmentType.STATIC, "1"),
         (SegmentType.POINTER, "9"),
-        (SegmentType.TEMP, "69"),
     ),
 )
 def test_push_offset_fails(
@@ -251,6 +251,7 @@ def test_push_offset_fails(
         (SegmentType.ARGUMENT, "1"),
         (SegmentType.THIS, "9"),
         (SegmentType.THAT, "69"),
+        (SegmentType.TEMP, "69"),
     ),
 )
 def test_pop_offset(
@@ -267,7 +268,6 @@ def test_pop_offset(
         (SegmentType.CONSTANT, "42"),
         (SegmentType.STATIC, "1"),
         (SegmentType.POINTER, "9"),
-        (SegmentType.TEMP, "69"),
     ),
 )
 def test_pop_offset_fails(
@@ -293,7 +293,6 @@ def test_to_assembly_with_offset(path: Path):
     unsupported_segments = [
         SegmentType.STATIC,
         SegmentType.POINTER,
-        SegmentType.TEMP,
     ]
     vm_lines = [
         vm_line

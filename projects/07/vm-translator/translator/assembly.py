@@ -6,6 +6,9 @@ from typing import List, Optional
 from translator.enums import SegmentType, SEGMENT_TYPE_TO_LABEL_MAP
 
 
+TEMP_SEGMENT_BASE_ADDRESS = "5"
+
+
 def pop_from_stack(store_in_d: bool = True) -> List[str]:
     """Return assembly to pop the value from top of stack and optionally store
     in register D. Popping is done via decrementing stack pointer SP by 1 and
@@ -68,6 +71,7 @@ def validate_offset_segment(segment_type: SegmentType) -> None:
         SegmentType.ARGUMENT,
         SegmentType.THIS,
         SegmentType.THAT,
+        SegmentType.TEMP,
     ), msg
 
 
@@ -75,7 +79,7 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
     """Implement assembly for `push <segment> i` where `i` represents an offset
     from the segment's base address stored at @segment_label in RAM.
 
-    Where <segment> is one of ("local", "argument", "this", "that")
+    Where <segment> is one of ("local", "argument", "this", "that", "temp")
 
     Take value at index i in <segment> and push it onto the stack.
 
@@ -99,7 +103,7 @@ def pop_offset(segment_type: SegmentType, index: str) -> List[str]:
     """Implement assembly for `pop <segment> i` where `i` represents an offset
     from the segment's base address stored at @segment_label in RAM.
 
-    Where <segment> is one of ("local", "argument", "this", "that")
+    Where <segment> is one of ("local", "argument", "this", "that", "temp")
 
     Pop value from the stack and store it at index i in <segment>.
 

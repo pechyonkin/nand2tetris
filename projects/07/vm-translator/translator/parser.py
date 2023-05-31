@@ -37,6 +37,7 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
     SegmentType.ARGUMENT: partial(push_offset, SegmentType.ARGUMENT),
     SegmentType.THIS: partial(push_offset, SegmentType.THIS),
     SegmentType.THAT: partial(push_offset, SegmentType.THAT),
+    SegmentType.TEMP: partial(push_offset, SegmentType.TEMP),
 }
 
 
@@ -45,6 +46,7 @@ POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
     SegmentType.ARGUMENT: partial(pop_offset, SegmentType.ARGUMENT),
     SegmentType.THIS: partial(pop_offset, SegmentType.THIS),
     SegmentType.THAT: partial(pop_offset, SegmentType.THAT),
+    SegmentType.TEMP: partial(pop_offset, SegmentType.TEMP),
 }
 
 

@@ -43,8 +43,8 @@ SEGMENT_TYPE_TO_LABEL_MAP = {
     SegmentType.ARGUMENT: "ARG",
     SegmentType.THIS: "THIS",
     SegmentType.THAT: "THAT",
+    SegmentType.TEMP: "5",  # not label but base address of the temp segment
     # SegmentType.CONSTANT: "",
     # SegmentType.STATIC: "",
     # SegmentType.POINTER: "",
-    # SegmentType.TEMP: "",
 }
