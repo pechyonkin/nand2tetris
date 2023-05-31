@@ -6,8 +6,13 @@ from translator.enums import SegmentType, SEGMENT_TYPE_TO_LABEL_MAP
 TEMP_SEGMENT_BASE_ADDRESS = "5"
 
 
-def push_constant(value: str) -> List[str]:
+def push_constant(
+    value: str,
+    fname: str,
+    line_num: int,
+) -> List[str]:
     """Push a constant 'value' onto the stack."""
+    del fname, line_num  # unused
     asm: List[str] = [
         # D = value
         f"@{value}",
@@ -35,7 +40,12 @@ def validate_offset_segment(segment_type: SegmentType) -> None:
     ), msg
 
 
-def push_offset(segment_type: SegmentType, index: str) -> List[str]:
+def push_offset(
+    segment_type: SegmentType,
+    index: str,
+    fname: str,
+    line_num: int,
+) -> List[str]:
     """Implement assembly for `push <segment> i` where `i` represents an offset
     from the segment's base address stored at @segment_label in RAM.
 
@@ -45,8 +55,11 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
 
     :param segment_type: only LOCAL, ARGUMENT, THIS, THAT are supported
     :param index: index at which to get the value from the segment
+    :param line_num: unused
+    :param fname: unused
     :return: list of assembly lines to achieve this operation
     """
+    del fname, line_num  # unused
     validate_offset_segment(segment_type=segment_type)
     segment = SEGMENT_TYPE_TO_LABEL_MAP[segment_type]
     asm = [
@@ -60,7 +73,12 @@ def push_offset(segment_type: SegmentType, index: str) -> List[str]:
     return asm
 
 
-def pop_offset(segment_type: SegmentType, index: str) -> List[str]:
+def pop_offset(
+    segment_type: SegmentType,
+    index: str,
+    fname: str,
+    line_num: int,
+) -> List[str]:
     """Implement assembly for `pop <segment> i` where `i` represents an offset
     from the segment's base address stored at @segment_label in RAM.
 
@@ -70,8 +88,11 @@ def pop_offset(segment_type: SegmentType, index: str) -> List[str]:
 
     :param segment_type: only LOCAL, ARGUMENT, THIS, THAT are supported
     :param index: index at which to get the value from the segment
+    :param line_num: unused
+    :param fname: unused
     :return: list of assembly lines to achieve this operation
     """
+    del fname, line_num  # unused
     validate_offset_segment(segment_type=segment_type)
     segment = SEGMENT_TYPE_TO_LABEL_MAP[segment_type]
     asm = pop_from_stack() + [  # stores popped value in D

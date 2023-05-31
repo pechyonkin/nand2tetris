@@ -227,7 +227,14 @@ def test_push_offset(
     index: str,
     snapshot: PyTestSnapshotTest,
 ) -> None:
-    snapshot.assert_match(push_offset(segment_type=segment_type, index=index))
+    snapshot.assert_match(
+        push_offset(
+            segment_type=segment_type,
+            index=index,
+            fname="Foo",
+            line_num=42,
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -243,7 +250,12 @@ def test_push_offset_fails(
     index: str,
 ) -> None:
     with pytest.raises(AssertionError):
-        push_offset(segment_type=segment_type, index=index)
+        push_offset(
+            segment_type=segment_type,
+            index=index,
+            fname="Foo",
+            line_num=42,
+        )
 
 
 @pytest.mark.parametrize(
@@ -261,7 +273,14 @@ def test_pop_offset(
     index: str,
     snapshot: PyTestSnapshotTest,
 ) -> None:
-    snapshot.assert_match(pop_offset(segment_type=segment_type, index=index))
+    snapshot.assert_match(
+        pop_offset(
+            segment_type=segment_type,
+            index=index,
+            fname="Foo",
+            line_num=42,
+        )
+    )
 
 
 @pytest.mark.parametrize(
@@ -277,7 +296,12 @@ def test_pop_offset_fails(
     index: str,
 ) -> None:
     with pytest.raises(AssertionError):
-        pop_offset(segment_type=segment_type, index=index)
+        pop_offset(
+            segment_type=segment_type,
+            index=index,
+            fname="Foo",
+            line_num=42,
+        )
 
 
 @pytest.mark.parametrize(

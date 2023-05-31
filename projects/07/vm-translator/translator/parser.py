@@ -29,7 +29,7 @@ SUPPORTED_ARITHMETIC_OPERATIONS = (
 )
 
 
-PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
+PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.CONSTANT: push_constant,
     SegmentType.LOCAL: partial(push_offset, SegmentType.LOCAL),
     SegmentType.ARGUMENT: partial(push_offset, SegmentType.ARGUMENT),
@@ -39,7 +39,7 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
 }
 
 
-POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str], List[str]]] = {
+POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.LOCAL: partial(pop_offset, SegmentType.LOCAL),
     SegmentType.ARGUMENT: partial(pop_offset, SegmentType.ARGUMENT),
     SegmentType.THIS: partial(pop_offset, SegmentType.THIS),
@@ -112,13 +112,17 @@ class VMCommand:
             and self.segment_type in PUSH_SEGMENT_FN_MAP
         ):
             push_value = get_value(self.command)
-            assembly_lines = PUSH_SEGMENT_FN_MAP[self.segment_type](push_value)
+            assembly_lines = PUSH_SEGMENT_FN_MAP[self.segment_type](
+                push_value, fname, line_num
+            )
         elif (
             self.command_type == VMCommandType.POP
             and self.segment_type in POP_SEGMENT_FN_MAP
         ):
             pop_value = get_value(self.command)
-            assembly_lines = POP_SEGMENT_FN_MAP[self.segment_type](pop_value)
+            assembly_lines = POP_SEGMENT_FN_MAP[self.segment_type](
+                pop_value, fname, line_num
+            )
         elif (
             self.command_type == VMCommandType.ARITHMETIC
             and self.command in ARITHMETIC_FN_MAP
