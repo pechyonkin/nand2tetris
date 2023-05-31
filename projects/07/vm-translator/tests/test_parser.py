@@ -3,7 +3,8 @@ from pathlib import Path
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
-from translator.assembly import eq, push_offset, pop_offset
+from translator.memory_segments import push_offset, pop_offset
+from translator.arithmetic_ops import eq
 from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
 from translator.parser import (
     load_vm_lines,

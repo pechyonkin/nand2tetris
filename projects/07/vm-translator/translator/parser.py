@@ -2,19 +2,17 @@ from functools import partial
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
-from translator.assembly import (
-    push_constant,
+from translator.memory_segments import push_constant, push_offset, pop_offset
+from translator.arithmetic_ops import (
+    not_op,
+    neg_op,
     add,
+    sub,
+    or_op,
+    and_op,
     eq,
     lt,
     gt,
-    sub,
-    or_op,
-    not_op,
-    neg_op,
-    and_op,
-    push_offset,
-    pop_offset,
 )
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
 
