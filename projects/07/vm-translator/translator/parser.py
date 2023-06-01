@@ -8,6 +8,8 @@ from translator.memory_segments import (
     pop_offset,
     push_static,
     pop_static,
+    push_pointer,
+    pop_pointer,
 )
 from translator.arithmetic_ops import (
     not_op,
@@ -43,6 +45,7 @@ PUSH_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.THAT: partial(push_offset, SegmentType.THAT),
     SegmentType.TEMP: partial(push_offset, SegmentType.TEMP),
     SegmentType.STATIC: push_static,
+    SegmentType.POINTER: push_pointer,
 }
 
 
@@ -53,6 +56,7 @@ POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
     SegmentType.THAT: partial(pop_offset, SegmentType.THAT),
     SegmentType.TEMP: partial(pop_offset, SegmentType.TEMP),
     SegmentType.STATIC: pop_static,
+    SegmentType.POINTER: pop_pointer,
 }
 
 

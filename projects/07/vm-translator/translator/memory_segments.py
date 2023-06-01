@@ -130,3 +130,25 @@ def pop_static(index: str, fname: str, line_num: int) -> List[str]:
         "M = D",
     ]
     return asm
+
+
+def push_pointer(index: str, fname: str, line_num: int) -> List[str]:
+    """Get base address of THIS or THAT and push it onto stack."""
+    assert index in ["0", "1"]
+    label = "THIS" if index == "0" else "THAT"
+    asm = [
+        f"@{label}",
+        "D = M",
+    ] + push_to_stack()
+    return asm
+
+
+def pop_pointer(index: str, fname: str, line_num: int) -> List[str]:
+    """Pop value from stack and store it as base address of THIS or THAT."""
+    assert index in ["0", "1"]
+    label = "THIS" if index == "0" else "THAT"
+    asm = pop_from_stack() + [
+        f"@{label}",
+        "M = D",
+    ]
+    return asm

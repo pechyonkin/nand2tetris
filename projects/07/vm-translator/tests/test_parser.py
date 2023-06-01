@@ -334,6 +334,7 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
         STACK_TEST_PATH,
         BASIC_TEST_PATH,
         STATIC_TEST_PATH,
+        POINTER_TEST_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:
