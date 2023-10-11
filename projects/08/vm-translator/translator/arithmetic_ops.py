@@ -2,24 +2,35 @@ from typing import List, Optional
 
 from translator.stack_ops import pop_from_stack, push_to_stack
 
+# True result should produce -1 (which is all 1s in 2's complement
+# http://nand2tetris-questions-and-answers-forum.52.s1.nabble.com/Logical-operations-tp72625p73856.html
+TRUE_ASSEMBLY_VALUE = "-1"
+FALSE_ASSEMBLY_VALUE = "0"
+
 
 def jump_op(
     jump_type: str,
-    line_num: int,
     fname: str,
+    line_num: int,
 ) -> List[str]:
+    """Assembly for a jump operation.
+
+    :param jump_type: jump type supported by assembly language, such as JEQ,
+        JLT, JGT, etc.
+    :param fname: filename is appended to created labels to make them unique
+    :param line_num: line number is appended to created labels to make them
+        unique
+    """
     true_label = f"TRUE_THEN_JUMP.{fname}.{line_num}"
     false_label = f"FALSE_THEN_DONT_JUMP.{fname}.{line_num}"
     asm = [
         f"@{true_label}",
         f"D; {jump_type}",
-        "D = 0",
+        f"D = {FALSE_ASSEMBLY_VALUE}",
         f"@{false_label}",
         "0; JMP",
         f"({true_label})",
-        # True result should produce -1 (which is all 1s in 2's complement
-        # http://nand2tetris-questions-and-answers-forum.52.s1.nabble.com/Logical-operations-tp72625p73856.html
-        "D = -1",
+        f"D = {TRUE_ASSEMBLY_VALUE}",
         f"({false_label})",
     ]
     return asm
