@@ -6,6 +6,12 @@ class VMCommandType(Enum):
     PUSH = 1
     POP = 2
     ARITHMETIC = 3
+    LABEL = 4
+    GOTO = 5
+    IF_GOTO = 6
+    FUNCTION = 7
+    CALL = 8
+    RETURN = 9
 
 
 class SegmentType(Enum):

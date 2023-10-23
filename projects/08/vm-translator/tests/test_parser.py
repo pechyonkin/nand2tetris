@@ -27,9 +27,9 @@ POINTER_TEST_PATH = Path("../../07/MemoryAccess/PointerTest/PointerTest.vm")
 # Project 8
 BASIC_LOOP_PATH = Path("../../08/ProgramFlow/BasicLoop/BasicLoop.vm")
 FIB_SERIES_PATH = Path("../../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm")
-FIB_ELEM_PATH = Path("../../08/FunctionCalls/FibonacciElement")
-NESTED_CALL_PATH = Path("../../08/FunctionCalls/NestedCall")
 SIMPLE_FUNC_PATH = Path("../../08/FunctionCalls/SimpleFunction/SimpleFunction.vm")
+NESTED_CALL_PATH = Path("../../08/FunctionCalls/NestedCall")
+FIB_ELEM_PATH = Path("../../08/FunctionCalls/FibonacciElement")
 STATICS_TEST_PATH = Path("../../08/FunctionCalls/StaticsTest")
 
 EXP_LINES_1 = [
@@ -74,6 +74,12 @@ def test_load_vm_lines() -> None:
         ("push constant 42", VMCommandType.PUSH),
         ("add", VMCommandType.ARITHMETIC),
         ("sub", VMCommandType.ARITHMETIC),
+        ("label NEW_LABEL", VMCommandType.LABEL),
+        ("goto NEW_LABEL", VMCommandType.GOTO),
+        ("if-goto NEW_LABEL", VMCommandType.IF_GOTO),
+        ("function Foo.bar 3", VMCommandType.FUNCTION),
+        ("call Foo.bar 2", VMCommandType.CALL),
+        ("return", VMCommandType.RETURN),
     ),
 )
 def test_command_type(line: str, exp_type: VMCommandType) -> None:

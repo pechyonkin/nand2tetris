@@ -80,6 +80,18 @@ def get_command_type(line: str) -> VMCommandType:
         return VMCommandType.POP
     if line in SUPPORTED_ARITHMETIC_OPERATIONS:
         return VMCommandType.ARITHMETIC
+    if line.startswith("label"):
+        return VMCommandType.LABEL
+    if line.startswith("goto"):
+        return VMCommandType.GOTO
+    if line.startswith("if-goto"):
+        return VMCommandType.IF_GOTO
+    if line.startswith("function"):
+        return VMCommandType.FUNCTION
+    if line.startswith("call"):
+        return VMCommandType.CALL
+    if line.startswith("return"):
+        return VMCommandType.RETURN
     raise ValueError(f"VM command '{line}' is not supported!")
 
 
