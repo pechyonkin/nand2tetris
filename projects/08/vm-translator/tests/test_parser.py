@@ -3,9 +3,9 @@ from pathlib import Path
 import pytest
 from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
-from translator.memory_segments import push_offset, pop_offset
 from translator.arithmetic_ops import eq
 from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
+from translator.memory_segments import push_offset, pop_offset
 from translator.parser import (
     load_vm_lines,
     get_command_type,
@@ -94,6 +94,12 @@ def test_command_type(line: str, exp_type: VMCommandType) -> None:
         ("push constant 42", VMCommandType.PUSH, SegmentType.CONSTANT),
         ("add", VMCommandType.ARITHMETIC, None),
         ("sub", VMCommandType.ARITHMETIC, None),
+        ("label NEW_LABEL", VMCommandType.LABEL, None),
+        ("goto NEW_LABEL", VMCommandType.GOTO, None),
+        ("if-goto NEW_LABEL", VMCommandType.IF_GOTO, None),
+        ("function Foo.bar 3", VMCommandType.FUNCTION, None),
+        ("call Foo.bar 2", VMCommandType.CALL, None),
+        ("return", VMCommandType.RETURN, None),
     ),
 )
 def test_make_vm_command(

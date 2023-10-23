@@ -2,15 +2,6 @@ from functools import partial
 from pathlib import Path
 from typing import List, Optional, Callable, Dict
 
-from translator.memory_segments import (
-    push_constant,
-    push_offset,
-    pop_offset,
-    push_static,
-    pop_static,
-    push_pointer,
-    pop_pointer,
-)
 from translator.arithmetic_ops import (
     not_op,
     neg_op,
@@ -23,6 +14,16 @@ from translator.arithmetic_ops import (
     gt,
 )
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
+from translator.memory_segments import (
+    push_constant,
+    push_offset,
+    pop_offset,
+    push_static,
+    pop_static,
+    push_pointer,
+    pop_pointer,
+)
+from translator.other_ops import label_op, goto_op, if_goto_op
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
     "add",
@@ -111,7 +112,7 @@ class VMCommand:
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
 
     def get_segment_type(self) -> Optional[SegmentType]:
-        if self.command_type == VMCommandType.ARITHMETIC:
+        if self.command_type not in (VMCommandType.POP, VMCommandType.PUSH):
             return None
         segment_str = self.command.split(" ")[1]
         if segment_str in SEGMENT_TO_TYPE_MAP:
@@ -153,6 +154,12 @@ class VMCommand:
             and self.command in ARITHMETIC_FN_MAP
         ):
             assembly_lines = ARITHMETIC_FN_MAP[self.command](fname, line_num)
+        elif self.command_type == VMCommandType.LABEL:
+            assembly_lines = label_op(self.command, fname, line_num)
+        elif self.command_type == VMCommandType.GOTO:
+            assembly_lines = goto_op(self.command, fname, line_num)
+        elif self.command_type == VMCommandType.IF_GOTO:
+            assembly_lines = if_goto_op(self.command, fname, line_num)
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
