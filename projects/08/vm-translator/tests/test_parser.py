@@ -17,11 +17,20 @@ from translator.parser import (
     vm_commands_to_assembly,
 )
 
+# Project 7
 SIMPLE_ADD_PATH = Path("../../07/StackArithmetic/SimpleAdd/SimpleAdd.vm")
 STACK_TEST_PATH = Path("../../07/StackArithmetic/StackTest/StackTest.vm")
 BASIC_TEST_PATH = Path("../../07/MemoryAccess/BasicTest/BasicTest.vm")
 STATIC_TEST_PATH = Path("../../07/MemoryAccess/StaticTest/StaticTest.vm")
 POINTER_TEST_PATH = Path("../../07/MemoryAccess/PointerTest/PointerTest.vm")
+
+# Project 8
+BASIC_LOOP_PATH = Path("../../08/ProgramFlow/BasicLoop/BasicLoop.vm")
+FIB_SERIES_PATH = Path("../../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm")
+FIB_ELEM_PATH = Path("../../08/FunctionCalls/FibonacciElement")
+NESTED_CALL_PATH = Path("../../08/FunctionCalls/NestedCall")
+SIMPLE_FUNC_PATH = Path("../../08/FunctionCalls/SimpleFunction/SimpleFunction.vm")
+STATICS_TEST_PATH = Path("../../08/FunctionCalls/StaticsTest")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -339,3 +348,12 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
 )
 def test_outfile_simple_add(path: Path) -> None:
     process_file(path=path)
+
+
+def test_project8_paths():
+    assert BASIC_LOOP_PATH.exists()
+    assert FIB_SERIES_PATH.exists()
+    assert FIB_ELEM_PATH.exists()
+    assert NESTED_CALL_PATH.exists()
+    assert SIMPLE_FUNC_PATH.exists()
+    assert STATICS_TEST_PATH.exists()
