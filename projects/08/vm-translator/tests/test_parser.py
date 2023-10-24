@@ -357,14 +357,16 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
         STATIC_TEST_PATH,
         POINTER_TEST_PATH,
         BASIC_LOOP_PATH,
+        FIB_SERIES_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:
     process_file(path=path)
 
 
-def test_basic_loop(snapshot: PyTestSnapshotTest):
-    vm_lines = load_vm_commands(path=BASIC_LOOP_PATH)
+@pytest.mark.parametrize("path", (BASIC_LOOP_PATH, FIB_SERIES_PATH))
+def test_label_ops(path: Path, snapshot: PyTestSnapshotTest):
+    vm_lines = load_vm_commands(path=path)
     asm = vm_commands_to_assembly(vm_commands=vm_lines)
     snapshot.assert_match(asm)
 
