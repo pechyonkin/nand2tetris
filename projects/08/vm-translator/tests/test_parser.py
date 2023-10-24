@@ -8,7 +8,7 @@ from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
 from translator.memory_segments import push_offset, pop_offset
 from translator.parser import (
     load_vm_lines,
-    get_command_type,
+    get_cmd_type,
     VMCommand,
     get_vm_filename,
     load_vm_commands,
@@ -83,7 +83,7 @@ def test_load_vm_lines() -> None:
     ),
 )
 def test_command_type(line: str, exp_type: VMCommandType) -> None:
-    assert get_command_type(line) == exp_type
+    assert get_cmd_type(line) == exp_type
 
 
 @pytest.mark.parametrize(
@@ -108,7 +108,7 @@ def test_make_vm_command(
     exp_segment: SegmentType,
 ) -> None:
     command = VMCommand(line=line, vm_filename="Foo.vm")
-    assert command.command_type == exp_type
+    assert command.cmd_type == exp_type
     assert command.segment_type == exp_segment
     assert command.command == line
 
@@ -332,7 +332,7 @@ def test_to_assembly_with_offset(path: Path):
         vm_line
         for vm_line in vm_lines
         if (
-            (vm_line.command_type in [VMCommandType.PUSH, VMCommandType.POP])
+            (vm_line.cmd_type in [VMCommandType.PUSH, VMCommandType.POP])
             and (vm_line.segment_type not in unsupported_segments)
         )
     ]

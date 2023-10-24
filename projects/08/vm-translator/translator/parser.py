@@ -23,7 +23,7 @@ from translator.memory_segments import (
     push_pointer,
     pop_pointer,
 )
-from translator.other_ops import label_op, goto_op, if_goto_op
+from translator.label_ops import label_op, goto_op, if_goto_op
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
     "add",
@@ -61,6 +61,13 @@ POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
 }
 
 
+LABEL_OP_FN_MAP: Dict[VMCommandType, Callable[[str, str, int], List[str]]] = {
+    VMCommandType.LABEL: label_op,
+    VMCommandType.GOTO: goto_op,
+    VMCommandType.IF_GOTO: if_goto_op,
+}
+
+
 ARITHMETIC_FN_MAP: Dict[str, Callable[[str, int], List[str]]] = {
     "add": add,
     "eq": eq,
@@ -74,7 +81,9 @@ ARITHMETIC_FN_MAP: Dict[str, Callable[[str, int], List[str]]] = {
 }
 
 
-def get_command_type(line: str) -> VMCommandType:
+def get_cmd_type(line: str) -> VMCommandType:
+    """Get VM command type from code line.
+    Code line is assumed to be stripped of comments and spaces."""
     if line.startswith("push"):
         return VMCommandType.PUSH
     if line.startswith("pop"):
@@ -106,13 +115,13 @@ def get_value(line: str) -> str:
 
 class VMCommand:
     def __init__(self, line: str, vm_filename: str):
-        self.command_type = get_command_type(line=line)
+        self.cmd_type = get_cmd_type(line=line)
         self.command = line
         self.vm_filename = vm_filename
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
 
     def get_segment_type(self) -> Optional[SegmentType]:
-        if self.command_type not in (VMCommandType.POP, VMCommandType.PUSH):
+        if self.cmd_type not in (VMCommandType.POP, VMCommandType.PUSH):
             return None
         segment_str = self.command.split(" ")[1]
         if segment_str in SEGMENT_TO_TYPE_MAP:
@@ -124,7 +133,7 @@ class VMCommand:
     def __str__(self):
         segment = "None" if not self.segment_type else self.segment_type.name
         str_repr = (
-            f"VMCommand('{self.command}', '{self.command_type.name}', "
+            f"VMCommand('{self.command}', '{self.cmd_type.name}', "
             f"'{segment}', '{self.vm_filename}')"
         )
         return str_repr
@@ -134,7 +143,7 @@ class VMCommand:
         fname = self.vm_filename
         result = [f"// {self.command}"]
         if (
-            self.command_type == VMCommandType.PUSH
+            self.cmd_type == VMCommandType.PUSH
             and self.segment_type in PUSH_SEGMENT_FN_MAP
         ):
             push_value = get_value(self.command)
@@ -142,7 +151,7 @@ class VMCommand:
                 push_value, fname, line_num
             )
         elif (
-            self.command_type == VMCommandType.POP
+            self.cmd_type == VMCommandType.POP
             and self.segment_type in POP_SEGMENT_FN_MAP
         ):
             pop_value = get_value(self.command)
@@ -150,16 +159,18 @@ class VMCommand:
                 pop_value, fname, line_num
             )
         elif (
-            self.command_type == VMCommandType.ARITHMETIC
+            self.cmd_type == VMCommandType.ARITHMETIC
             and self.command in ARITHMETIC_FN_MAP
         ):
             assembly_lines = ARITHMETIC_FN_MAP[self.command](fname, line_num)
-        elif self.command_type == VMCommandType.LABEL:
-            assembly_lines = label_op(self.command, fname, line_num)
-        elif self.command_type == VMCommandType.GOTO:
-            assembly_lines = goto_op(self.command, fname, line_num)
-        elif self.command_type == VMCommandType.IF_GOTO:
-            assembly_lines = if_goto_op(self.command, fname, line_num)
+        elif self.cmd_type in (
+            VMCommandType.LABEL,
+            VMCommandType.GOTO,
+            VMCommandType.IF_GOTO,
+        ):
+            assembly_lines = LABEL_OP_FN_MAP[self.cmd_type](
+                self.command, fname, line_num
+            )
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
