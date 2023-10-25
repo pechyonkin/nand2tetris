@@ -6,7 +6,7 @@ from translator.stack_ops import push_to_stack, pop_from_stack
 def get_label(line: str) -> str:
     """Extract label from a label VM command. Label is second word."""
     words = line.split(" ")
-    assert len(words) == 2, f"Label command {line} must only have two words!"
+    assert len(words) == 2, f"Label command {line} must have exactly 2 words"
     return words[1]
 
 

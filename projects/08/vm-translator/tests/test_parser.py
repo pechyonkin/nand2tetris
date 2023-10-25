@@ -5,6 +5,7 @@ from snapshottest.pytest import PyTestSnapshotTest  # type: ignore
 
 from translator.arithmetic_ops import eq
 from translator.enums import VMCommandType, SegmentType, TYPE_TO_SEGMENT_MAP
+from translator.function_ops import function_op
 from translator.memory_segments import push_offset, pop_offset
 from translator.parser import (
     load_vm_lines,
@@ -362,6 +363,12 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
 )
 def test_outfile_simple_add(path: Path) -> None:
     process_file(path=path)
+
+
+def test_function_op(snapshot: PyTestSnapshotTest):
+    line = "function SimpleFunction.test 2"
+    asm = function_op(line, "fname", 0)
+    snapshot.assert_match(asm)
 
 
 @pytest.mark.parametrize("path", (BASIC_LOOP_PATH, FIB_SERIES_PATH))
