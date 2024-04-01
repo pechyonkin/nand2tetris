@@ -23,8 +23,10 @@ def pop_from_stack(store_in_d: bool = True) -> List[str]:
     return asm
 
 
-def push_to_stack() -> List[str]:
+def push_reg_d_to_stack() -> List[str]:
     """Return assembly to push the value contained in register D to stack.
+
+    SP is incremented after the push to D.
 
     :return: list of assembly commands to achieve "push to stack" operation.
     """

@@ -15,6 +15,15 @@ if __name__ == "__main__":
         path = Path(path)
         print(f"Processing {path}: ")
 
+        # TODO check and process if input is a directory
+        # currently, it assumes the input is a valid filename
+        """
+        Input: a fileName.vm : the name of a single source file, or
+        a directoryName: the name of a directory containing one or more .vm source files
+
+        Output: a fileName.asm file, or
+        a directoryName.asm file
+        """
         if path.exists():
             process_file(path=path)
             print("\tDone processing!\n")

@@ -23,7 +23,8 @@ from translator.memory_segments import (
     push_pointer,
     pop_pointer,
 )
-from translator.label_ops import label_op, goto_op, if_goto_op
+from translator.label_ops import label_op
+from translator.branching_ops import goto_op, if_goto_op
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
     "add",

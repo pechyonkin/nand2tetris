@@ -1,6 +1,6 @@
 from typing import List
 
-from translator.stack_ops import push_to_stack, pop_from_stack
+from translator.stack_ops import push_reg_d_to_stack, pop_from_stack
 from translator.enums import SegmentType, SEGMENT_TYPE_TO_LABEL_MAP
 
 TEMP_SEGMENT_BASE_ADDRESS = "5"
@@ -69,7 +69,7 @@ def push_offset(
         # calculate target address = <segment> + i and select that address
         f"AD = D + {'A' if segment_type == SegmentType.TEMP else 'M'}",
         "D = M",  # store value from the selected address in D
-    ] + push_to_stack()  # push the value in D onto stack and increment SP
+    ] + push_reg_d_to_stack()
     return asm
 
 
@@ -119,7 +119,7 @@ def push_static(index: str, fname: str, line_num: int) -> List[str]:
     asm = [
         f"@{fname}.{index}",
         "D = M",
-    ] + push_to_stack()
+    ] + push_reg_d_to_stack()
     return asm
 
 
@@ -139,7 +139,7 @@ def push_pointer(index: str, fname: str, line_num: int) -> List[str]:
     asm = [
         f"@{label}",
         "D = M",
-    ] + push_to_stack()
+    ] + push_reg_d_to_stack()
     return asm
 
 

@@ -1,7 +1,7 @@
 """Function ops: function, call, return."""
 from typing import List
 
-from translator.stack_ops import push_to_stack
+from translator.stack_ops import push_reg_d_to_stack
 
 
 def function_op(line: str, fname: str, line_num: int) -> List[str]:
@@ -15,5 +15,5 @@ def function_op(line: str, fname: str, line_num: int) -> List[str]:
     # Push 0 to stack nvars times
     for _ in range(nvars):
         # Store 0 in D, then push it to stack
-        asm += ["D = 0"] + push_to_stack()
+        asm += ["D = 0"] + push_reg_d_to_stack()
     return asm

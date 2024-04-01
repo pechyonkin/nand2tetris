@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from translator.stack_ops import pop_from_stack, push_to_stack
+from translator.stack_ops import pop_from_stack, push_reg_d_to_stack
 
 # True result should produce -1 (which is all 1s in 2's complement
 # http://nand2tetris-questions-and-answers-forum.52.s1.nabble.com/Logical-operations-tp72625p73856.html
@@ -55,7 +55,7 @@ def arithmetic_op(
             line_num=line_num,
             fname=fname,
         )
-    asm += push_to_stack()  # push D onto stack
+    asm += push_reg_d_to_stack()
     return asm
 
 
@@ -67,7 +67,7 @@ def unary_arithmetic_op(
     asm = (
         pop_from_stack(store_in_d=True)  # store the operand in D
         + [f"D = {operator} D"]  # perform the operation
-        + push_to_stack()  # push D onto stack
+        + push_reg_d_to_stack()
     )
     return asm
 
