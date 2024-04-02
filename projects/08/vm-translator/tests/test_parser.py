@@ -29,9 +29,9 @@ POINTER_TEST_PATH = Path("../../07/MemoryAccess/PointerTest/PointerTest.vm")
 BASIC_LOOP_PATH = Path("../../08/ProgramFlow/BasicLoop/BasicLoop.vm")
 FIB_SERIES_PATH = Path("../../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm")
 SIMPLE_FUNC_PATH = Path("../../08/FunctionCalls/SimpleFunction/SimpleFunction.vm")
-NESTED_CALL_PATH = Path("../../08/FunctionCalls/NestedCall")
-FIB_ELEM_PATH = Path("../../08/FunctionCalls/FibonacciElement")
-STATICS_TEST_PATH = Path("../../08/FunctionCalls/StaticsTest")
+NESTED_CALL_DIR_PATH = Path("../../08/FunctionCalls/NestedCall")
+FIB_ELEM_DIR_PATH = Path("../../08/FunctionCalls/FibonacciElement")
+STATICS_TEST_DIR_PATH = Path("../../08/FunctionCalls/StaticsTest")
 
 EXP_LINES_1 = [
     "push constant 10",
@@ -381,7 +381,7 @@ def test_label_ops(path: Path, snapshot: PyTestSnapshotTest):
 def test_project8_paths():
     assert BASIC_LOOP_PATH.exists()
     assert FIB_SERIES_PATH.exists()
-    assert FIB_ELEM_PATH.exists()
-    assert NESTED_CALL_PATH.exists()
     assert SIMPLE_FUNC_PATH.exists()
-    assert STATICS_TEST_PATH.exists()
+    assert NESTED_CALL_DIR_PATH.exists()
+    assert FIB_ELEM_DIR_PATH.exists()
+    assert STATICS_TEST_DIR_PATH.exists()
