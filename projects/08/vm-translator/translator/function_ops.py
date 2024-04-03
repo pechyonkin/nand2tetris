@@ -20,15 +20,15 @@ def function_op(line: str, fname: str, line_num: int) -> List[str]:
 
 
 def _end_frame_minus(offset: int, eof: str) -> List[str]:
-    """Return assembly for getting address of end of frame minus given offset
-    and storing it in register D.
-
-    This assumes that the end of frame"""
+    """Return assembly for getting value at memory address of end of frame minus
+    given offset and storing it in register D."""
     return [
         f"@{eof}",
         "D = M",
         f"@{offset}",
-        "D = D - A",
+        "D = D - A",  # register address of `eof - offset`
+        "A = D",  # select register at `eof - offset`
+        "D = M",  # store value from that register in D
     ]
 
 
@@ -55,13 +55,15 @@ def return_op(line: str, fname: str, line_num: int) -> List[str]:
     # store return value into memory pointed at by ARG
     asm += [
         "@ARG",
+        "A = M",  # select register pointed to by ARG
         "M = D",
     ]
     # reposition SP olf caller to ARG + 1
     asm += [
-        "D = A + 1",
+        "@ARG",
+        "D = M",
         "@SP",
-        "M = D",
+        "M = D + 1",
     ]
     # TODO refactor the below
     # set THAT = *(eof - 1)
@@ -87,6 +89,7 @@ def return_op(line: str, fname: str, line_num: int) -> List[str]:
     # goto return address
     asm += [
         f"@{ret_addr}",
+        "A = M",
         "0;JMP",
     ]
 

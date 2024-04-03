@@ -13,7 +13,10 @@ from translator.arithmetic_ops import (
     lt,
     gt,
 )
+from translator.branching_ops import goto_op, if_goto_op
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
+from translator.function_ops import return_op, function_op
+from translator.label_ops import label_op
 from translator.memory_segments import (
     push_constant,
     push_offset,
@@ -23,8 +26,6 @@ from translator.memory_segments import (
     push_pointer,
     pop_pointer,
 )
-from translator.label_ops import label_op
-from translator.branching_ops import goto_op, if_goto_op
 
 SUPPORTED_ARITHMETIC_OPERATIONS = (
     "add",
@@ -172,6 +173,10 @@ class VMCommand:
             assembly_lines = LABEL_OP_FN_MAP[self.cmd_type](
                 self.command, fname, line_num
             )
+        elif self.cmd_type == VMCommandType.FUNCTION:
+            assembly_lines = function_op(self.command, fname, line_num)
+        elif self.cmd_type == VMCommandType.RETURN:
+            assembly_lines = return_op(self.command, fname, line_num)
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
