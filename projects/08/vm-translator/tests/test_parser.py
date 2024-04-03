@@ -352,13 +352,16 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
 @pytest.mark.parametrize(
     "path",
     (
+        # Project 7
         SIMPLE_ADD_PATH,
         STACK_TEST_PATH,
         BASIC_TEST_PATH,
         STATIC_TEST_PATH,
         POINTER_TEST_PATH,
+        # Project 8
         BASIC_LOOP_PATH,
         FIB_SERIES_PATH,
+        SIMPLE_FUNC_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:
