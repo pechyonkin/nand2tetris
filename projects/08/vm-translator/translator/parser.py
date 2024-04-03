@@ -231,6 +231,7 @@ def vm_commands_to_assembly(
 def get_assembly_lines(path: Path) -> List[str]:
     vm_commands = load_vm_commands(path=path)
     asm = vm_commands_to_assembly(vm_commands=vm_commands)
+    asm = [line + "\n" for line in asm]
     return asm
 
 
@@ -245,7 +246,6 @@ def get_output_path(path: Path) -> Path:
 
 def process_file(path: Path) -> None:
     assembly_lines = get_assembly_lines(path=path)
-    assembly_lines = [line + "\n" for line in assembly_lines]
     out_path = get_output_path(path=path)
     with open(out_path, "w") as out_f:
         out_f.writelines(assembly_lines)
