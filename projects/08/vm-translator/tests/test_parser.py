@@ -13,10 +13,11 @@ from translator.parser import (
     VMCommand,
     get_vm_filename,
     load_vm_commands,
-    get_assembly_lines,
+    get_file_assembly_lines,
     process_file,
     vm_commands_to_assembly,
     get_output_path,
+    process_dir,
 )
 
 # Project 7
@@ -200,7 +201,7 @@ def test_stack_arithmetic(
     snapshot: PyTestSnapshotTest,
 ) -> None:
     """Test the two StackArithmetic .vm files."""
-    result = get_assembly_lines(path=path)
+    result = get_file_assembly_lines(path=path)
     snapshot.assert_match(result)
 
 
@@ -363,10 +364,17 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
         BASIC_LOOP_PATH,
         FIB_SERIES_PATH,
         SIMPLE_FUNC_PATH,
+        # TODO: make these work
+        # NESTED_CALL_DIR_PATH,
+        # FIB_ELEM_DIR_PATH,
+        # STATICS_TEST_DIR_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:
-    process_file(path=path)
+    if path.is_file():
+        process_file(path=path)
+    elif path.is_dir():
+        process_dir(path=path)
 
 
 def test_function_op(snapshot: PyTestSnapshotTest):

@@ -228,7 +228,7 @@ def vm_commands_to_assembly(
     return assembly_lines
 
 
-def get_assembly_lines(path: Path) -> List[str]:
+def get_file_assembly_lines(path: Path) -> List[str]:
     vm_commands = load_vm_commands(path=path)
     asm = vm_commands_to_assembly(vm_commands=vm_commands)
     asm = [line + "\n" for line in asm]
@@ -249,11 +249,19 @@ def get_output_path(path: Path) -> Path:
 
 
 def process_file(path: Path) -> None:
-    assembly_lines = get_assembly_lines(path=path)
+    file_assembly_lines = get_file_assembly_lines(path=path)
     out_path = get_output_path(path=path)
     with open(out_path, "w") as out_f:
-        out_f.writelines(assembly_lines)
+        out_f.writelines(file_assembly_lines)
 
 
 def process_dir(path: Path) -> None:
-    ...
+    assembly_lines = []
+    for vm_file in path.glob("*.vm"):
+        # Get the assembly lines for each .vm file
+        file_assembly_lines = get_file_assembly_lines(path=vm_file)
+        # Add these lines to the overall list
+        assembly_lines.extend(file_assembly_lines)
+    out_path = get_output_path(path=path)
+    with open(out_path, "w") as out_f:
+        out_f.writelines(assembly_lines)
