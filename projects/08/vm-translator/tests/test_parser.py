@@ -16,6 +16,7 @@ from translator.parser import (
     get_assembly_lines,
     process_file,
     vm_commands_to_assembly,
+    get_output_path,
 )
 
 # Project 7
@@ -388,3 +389,18 @@ def test_project8_paths():
     assert NESTED_CALL_DIR_PATH.exists()
     assert FIB_ELEM_DIR_PATH.exists()
     assert STATICS_TEST_DIR_PATH.exists()
+
+
+@pytest.mark.parametrize(
+    "path,expected_out_path",
+    (
+        (SIMPLE_ADD_PATH, Path("../../07/StackArithmetic/SimpleAdd/SimpleAdd.asm")),
+        (
+            NESTED_CALL_DIR_PATH,
+            Path("../../08/FunctionCalls/NestedCall/NestedCall.asm"),
+        ),
+    ),
+)
+def test_get_output_path(path: Path, expected_out_path: Path) -> None:
+    out_path = get_output_path(path)
+    assert out_path == expected_out_path

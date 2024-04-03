@@ -240,7 +240,11 @@ def get_output_path(path: Path) -> Path:
     file_dir = path.parent
     fname_no_extension = path.stem
     fname_asm = fname_no_extension + ".asm"
-    out_path = file_dir / fname_asm
+    if path.is_file():
+        out_path = file_dir / fname_asm
+    else:
+        # if input is directory, the output file should be inside the directory
+        out_path = path / fname_asm
     return out_path
 
 
@@ -249,3 +253,7 @@ def process_file(path: Path) -> None:
     out_path = get_output_path(path=path)
     with open(out_path, "w") as out_f:
         out_f.writelines(assembly_lines)
+
+
+def process_dir(path: Path) -> None:
+    ...
