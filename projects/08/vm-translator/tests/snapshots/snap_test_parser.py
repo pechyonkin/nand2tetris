@@ -509,31 +509,156 @@ snapshots['test_label_ops[path1] 1'] = [
 ]
 
 snapshots['test_load_vm_commands 1'] = [
-    "VMCommand('push constant 10', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('pop local 0', 'POP', 'LOCAL', 'BasicTest')",
-    "VMCommand('push constant 21', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('push constant 22', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('pop argument 2', 'POP', 'ARGUMENT', 'BasicTest')",
-    "VMCommand('pop argument 1', 'POP', 'ARGUMENT', 'BasicTest')",
-    "VMCommand('push constant 36', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('pop this 6', 'POP', 'THIS', 'BasicTest')",
-    "VMCommand('push constant 42', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('push constant 45', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('pop that 5', 'POP', 'THAT', 'BasicTest')",
-    "VMCommand('pop that 2', 'POP', 'THAT', 'BasicTest')",
-    "VMCommand('push constant 510', 'PUSH', 'CONSTANT', 'BasicTest')",
-    "VMCommand('pop temp 6', 'POP', 'TEMP', 'BasicTest')",
-    "VMCommand('push local 0', 'PUSH', 'LOCAL', 'BasicTest')",
-    "VMCommand('push that 5', 'PUSH', 'THAT', 'BasicTest')",
-    "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest')",
-    "VMCommand('push argument 1', 'PUSH', 'ARGUMENT', 'BasicTest')",
-    "VMCommand('sub', 'ARITHMETIC', 'None', 'BasicTest')",
-    "VMCommand('push this 6', 'PUSH', 'THIS', 'BasicTest')",
-    "VMCommand('push this 6', 'PUSH', 'THIS', 'BasicTest')",
-    "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest')",
-    "VMCommand('sub', 'ARITHMETIC', 'None', 'BasicTest')",
-    "VMCommand('push temp 6', 'PUSH', 'TEMP', 'BasicTest')",
-    "VMCommand('add', 'ARITHMETIC', 'None', 'BasicTest')"
+    '''VMCommand:
+\tcommand: push constant 10
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop local 0
+\tcmd_type: POP
+\tsegment: LOCAL
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 21
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 22
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop argument 2
+\tcmd_type: POP
+\tsegment: ARGUMENT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop argument 1
+\tcmd_type: POP
+\tsegment: ARGUMENT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 36
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop this 6
+\tcmd_type: POP
+\tsegment: THIS
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 42
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 45
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop that 5
+\tcmd_type: POP
+\tsegment: THAT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop that 2
+\tcmd_type: POP
+\tsegment: THAT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push constant 510
+\tcmd_type: PUSH
+\tsegment: CONSTANT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: pop temp 6
+\tcmd_type: POP
+\tsegment: TEMP
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push local 0
+\tcmd_type: PUSH
+\tsegment: LOCAL
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push that 5
+\tcmd_type: PUSH
+\tsegment: THAT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: add
+\tcmd_type: ARITHMETIC
+\tsegment: None
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push argument 1
+\tcmd_type: PUSH
+\tsegment: ARGUMENT
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: sub
+\tcmd_type: ARITHMETIC
+\tsegment: None
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push this 6
+\tcmd_type: PUSH
+\tsegment: THIS
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push this 6
+\tcmd_type: PUSH
+\tsegment: THIS
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: add
+\tcmd_type: ARITHMETIC
+\tsegment: None
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: sub
+\tcmd_type: ARITHMETIC
+\tsegment: None
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: push temp 6
+\tcmd_type: PUSH
+\tsegment: TEMP
+\tvm_filename: BasicTest
+\tret_counter: None''',
+    '''VMCommand:
+\tcommand: add
+\tcmd_type: ARITHMETIC
+\tsegment: None
+\tvm_filename: BasicTest
+\tret_counter: None'''
 ]
 
 snapshots['test_pop_offset[SegmentType.ARGUMENT-1] 1'] = [

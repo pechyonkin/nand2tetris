@@ -118,7 +118,7 @@ def test_make_vm_command(
         line=line,
         vm_filename="Foo.vm",
         cmd_type=get_cmd_type(line),
-        cur_function="Sys.init",
+        cur_fname_dot_func="Sys.init",
     )
     assert command.cmd_type == exp_type
     assert command.segment_type == exp_segment
@@ -185,7 +185,7 @@ def test_push_constant_assembly() -> None:
         line=line,
         vm_filename="Foo.vm",
         cmd_type=get_cmd_type(line),
-        cur_function="Sys.init",
+        cur_fname_dot_func="Sys.init",
     )
     assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_PUSH_CONSTANT_17
@@ -197,7 +197,7 @@ def test_add_assembly() -> None:
         line=line,
         vm_filename="Foo.vm",
         cmd_type=get_cmd_type(line),
-        cur_function="Sys.init",
+        cur_fname_dot_func="Sys.init",
     )
     assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_ADD
@@ -210,7 +210,7 @@ def test_not_implemented() -> None:
         line=line,
         vm_filename="Foo.vm",
         cmd_type=get_cmd_type(line),
-        cur_function="Sys.init",
+        cur_fname_dot_func="Sys.init",
     )
     with pytest.raises(NotImplementedError):
         _ = command.to_assembly(line_num=0)
@@ -375,13 +375,13 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
             "push static 42",
             "Foo",
             cmd_type=VMCommandType.PUSH,
-            cur_function="Sys.init",
+            cur_fname_dot_func="Sys.init",
         ),
         VMCommand(
             "pop static 69",
             "Foo",
             cmd_type=VMCommandType.POP,
-            cur_function="Sys.init",
+            cur_fname_dot_func="Sys.init",
         ),
     ]
     asm = vm_commands_to_assembly(vm_commands=vm_lines)

@@ -126,14 +126,14 @@ class VMCommand:
         line: str,
         vm_filename: str,
         cmd_type: VMCommandType,
-        cur_function: str,
+        cur_fname_dot_func: str,
         return_counter: Optional[int] = None,
     ) -> None:
         """Initialize VMCommand representation of the .vm line
         :param line: string of .vm command line
         :param vm_filename: filename of the .vm file for this command
         :param cmd_type: command type of command
-        :param cur_function: current function in which this command is nested.
+        :param cur_fname_dot_func: current function in which this command is nested.
             This is full function name of format {.vm filename}.{function name}
         :param return_counter: in a `call` command, number representing which
             call command it is within the current function
@@ -141,7 +141,7 @@ class VMCommand:
         self.cmd_type = cmd_type
         self.command = line
         self.vm_filename = vm_filename
-        self.cur_function = cur_function
+        self.cur_fname_dot_func = cur_fname_dot_func
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
         self.return_counter = return_counter
 
@@ -158,8 +158,9 @@ class VMCommand:
     def __str__(self):
         segment = "None" if not self.segment_type else self.segment_type.name
         str_repr = (
-            f"VMCommand('{self.command}', '{self.cmd_type.name}', "
-            f"'{segment}', '{self.vm_filename}')"
+            f"VMCommand:\n\tcommand: {self.command}\n\tcmd_type: "
+            f"{self.cmd_type.name}\n\tsegment: {segment}\n\tvm_filename: "
+            f"{self.vm_filename}\n\tret_counter: {self.return_counter}"
         )
         return str_repr
 
@@ -205,7 +206,7 @@ class VMCommand:
                 line=self.command,
                 fname=fname,
                 line_num=line_num,
-                cur_function=self.cur_function,
+                cur_fname_dot_func=self.cur_fname_dot_func,
                 return_counter=self.return_counter,
             )
         else:
@@ -256,7 +257,7 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
                 line=line,
                 vm_filename=fname,
                 cmd_type=command_type,
-                cur_function=cur_function,
+                cur_fname_dot_func=cur_function,
                 return_counter=ret_counter,
             )
             ret_counter += 1
@@ -265,7 +266,7 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
                 line=line,
                 vm_filename=fname,
                 cmd_type=command_type,
-                cur_function=cur_function,
+                cur_fname_dot_func=cur_function,
             )
         commands.append(vm_command)
     return commands

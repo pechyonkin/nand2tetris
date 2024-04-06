@@ -122,10 +122,55 @@ def call_op(
     line: str,
     fname: str,
     line_num: int,
-    cur_function: str,
+    cur_fname_dot_func: str,
     return_counter: Optional[int],
 ) -> List[str]:
-    assert return_counter, "Call command must have a return counter!"
+    assert (
+        return_counter is not None
+    ), "Call command must have a return counter!"
+    words = line.split(" ")
+    assert len(words) == 3, f"Call command {line} must have exactly 3 words"
+    assert (
+        words[0] == "call"
+    ), f"Call command {line} must start with the word `call`"
+    called_func_name = words[1]
+    n_args = int(words[-1])
+    return_label = f"{cur_fname_dot_func}$ret.{return_counter}"
     asm: List[str] = []
-    # TODO: implement
+
+    # push return address to stack
+    asm += [
+        f"@{return_label}",
+        "D = A",
+    ] + push_reg_d_to_stack()
+    # save LCL, ARG, THIS, THAT to stack
+    for label in ("LCL", "ARG", "THIS", "THAT"):
+        asm += [
+            f"@{label}",
+            "D = M",
+        ] + push_reg_d_to_stack()
+    # reposition ARG
+    asm += [
+        "@SP",
+        "D = M",
+        "@5",
+        "D = D - A",
+        f"{n_args}",
+        "D = D - A",
+        "@ARG",
+        "M = D",
+    ]
+    # LCL = SP
+    asm += [
+        "@SP",
+        "D = M",
+        "@LCL",
+        "M = D",
+    ]
+    # goto function_name
+    asm += [
+        f"@{called_func_name}",
+        "0;JMP",
+    ]
+    asm += [f"({return_label})"]
     return asm
