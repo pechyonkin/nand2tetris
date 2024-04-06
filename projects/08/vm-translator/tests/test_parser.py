@@ -29,8 +29,12 @@ POINTER_TEST_PATH = Path("../../07/MemoryAccess/PointerTest/PointerTest.vm")
 
 # Project 8
 BASIC_LOOP_PATH = Path("../../08/ProgramFlow/BasicLoop/BasicLoop.vm")
-FIB_SERIES_PATH = Path("../../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm")
-SIMPLE_FUNC_PATH = Path("../../08/FunctionCalls/SimpleFunction/SimpleFunction.vm")
+FIB_SERIES_PATH = Path(
+    "../../08/ProgramFlow/FibonacciSeries/FibonacciSeries.vm"
+)
+SIMPLE_FUNC_PATH = Path(
+    "../../08/FunctionCalls/SimpleFunction/SimpleFunction.vm"
+)
 NESTED_CALL_DIR_PATH = Path("../../08/FunctionCalls/NestedCall")
 FIB_ELEM_DIR_PATH = Path("../../08/FunctionCalls/FibonacciElement")
 STATICS_TEST_DIR_PATH = Path("../../08/FunctionCalls/StaticsTest")
@@ -402,7 +406,10 @@ def test_project8_paths():
 @pytest.mark.parametrize(
     "path,expected_out_path",
     (
-        (SIMPLE_ADD_PATH, Path("../../07/StackArithmetic/SimpleAdd/SimpleAdd.asm")),
+        (
+            SIMPLE_ADD_PATH,
+            Path("../../07/StackArithmetic/SimpleAdd/SimpleAdd.asm"),
+        ),
         (
             NESTED_CALL_DIR_PATH,
             Path("../../08/FunctionCalls/NestedCall/NestedCall.asm"),

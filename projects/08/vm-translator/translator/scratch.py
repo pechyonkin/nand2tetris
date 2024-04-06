@@ -31,11 +31,18 @@ def jump_line(
     if set_line_number:
         assert line_number
     if not set_file_name:
-        result = f"{string}{ln if set_ln else ''}{comment if not comment else '//' + comment}"
+        result = (
+            f"{string}{ln if set_ln else ''}"
+            + f"{comment if not comment else '//' + comment}"
+        )
     elif label == "@":
-        result = f"{string}.{fname}.{ln}{comment if not comment else '//' + comment}"
+        result = (
+            f"{string}.{fname}.{ln}{comment if not comment else '//' + comment}"
+        )
     else:
-        result = f"{string}.{fname}.{ln}{comment if not comment else ')'}//{comment}"
+        result = (
+            f"{string}.{fname}.{ln}{comment if not comment else ')'}//{comment}"
+        )
     return result
 
 
