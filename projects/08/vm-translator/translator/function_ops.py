@@ -1,17 +1,39 @@
 """Function ops: function, call, return."""
-from typing import List
+from typing import List, NamedTuple
 
 from translator.stack_ops import push_reg_d_to_stack, pop_from_stack
+
+
+class ParsedFunctionLine(NamedTuple):
+    filename: str
+    func_name: str
+    nvars: int
+
+    @property
+    def full_function_name(self) -> str:
+        return f"{self.filename}.{self.func_name}"
+
+
+def parse_function_line(line: str) -> ParsedFunctionLine:
+    words = line.split(" ")
+    assert len(words) == 3, f"Function command {line} must have exactly 3 words"
+    assert words[0] == "function", f"First line should be `function`"
+    filename, func_name = words[1].split(".")
+    return ParsedFunctionLine(
+        filename=filename,
+        func_name=func_name,
+        nvars=int(words[2]),
+    )
 
 
 def function_op(line: str, fname: str, line_num: int) -> List[str]:
     """Generate assembly for function vm command."""
     asm: List[str] = []
-    words = line.split(" ")
-    assert len(words) == 3, f"Function command {line} must have exactly 3 words"
-    fname, nvars = words[1], int(words[2])
+    parsed_func_line = parse_function_line(line=line)
+    func_name = parsed_func_line.full_function_name
+    nvars = parsed_func_line.nvars
     # Declare function as label in assembly
-    asm += [f"({fname})"]
+    asm += [f"({func_name})"]
     # Push 0 to stack nvars times
     for _ in range(nvars):
         # Store 0 in D, then push it to stack

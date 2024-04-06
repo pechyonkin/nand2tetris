@@ -15,7 +15,12 @@ from translator.arithmetic_ops import (
 )
 from translator.branching_ops import goto_op, if_goto_op
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
-from translator.function_ops import return_op, function_op, call_op
+from translator.function_ops import (
+    return_op,
+    function_op,
+    call_op,
+    parse_function_line,
+)
 from translator.label_ops import label_op
 from translator.memory_segments import (
     push_constant,
@@ -121,10 +126,18 @@ class VMCommand:
         line: str,
         vm_filename: str,
         cmd_type: VMCommandType,
+        cur_function: str,
     ) -> None:
+        """Initialize VMCommand representation of the .vm line
+        :param line: string of .vm command line
+        :param vm_filename: filename of the .vm file for this command
+        :param cmd_type: command type of command
+        :param cur_function: current function in which this command is nested
+        """
         self.cmd_type = cmd_type
         self.command = line
         self.vm_filename = vm_filename
+        self.cur_function = cur_function
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
 
     def get_segment_type(self) -> Optional[SegmentType]:
@@ -221,10 +234,15 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
     commands = []
     for line in lines:
         command_type = get_cmd_type(line)
+        cur_function = "Sys.init"
+        if command_type == VMCommandType.FUNCTION:
+            parsed_line = parse_function_line(line=line)
+            cur_function = parsed_line.full_function_name
         vm_command = VMCommand(
             line=line,
             vm_filename=fname,
             cmd_type=command_type,
+            cur_function=cur_function,
         )
         commands.append(vm_command)
     return commands
