@@ -94,3 +94,9 @@ def return_op(line: str, fname: str, line_num: int) -> List[str]:
     ]
 
     return asm
+
+
+def call_op(line: str, fname: str, line_num: int) -> List[str]:
+    asm: List[str] = []
+    # TODO: implement
+    return asm

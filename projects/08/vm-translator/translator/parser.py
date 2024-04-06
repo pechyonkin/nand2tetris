@@ -15,7 +15,7 @@ from translator.arithmetic_ops import (
 )
 from translator.branching_ops import goto_op, if_goto_op
 from translator.enums import VMCommandType, SegmentType, SEGMENT_TO_TYPE_MAP
-from translator.function_ops import return_op, function_op
+from translator.function_ops import return_op, function_op, call_op
 from translator.label_ops import label_op
 from translator.memory_segments import (
     push_constant,
@@ -116,8 +116,13 @@ def get_value(line: str) -> str:
 
 
 class VMCommand:
-    def __init__(self, line: str, vm_filename: str):
-        self.cmd_type = get_cmd_type(line=line)
+    def __init__(
+        self,
+        line: str,
+        vm_filename: str,
+        cmd_type: VMCommandType,
+    ) -> None:
+        self.cmd_type = cmd_type
         self.command = line
         self.vm_filename = vm_filename
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
@@ -177,6 +182,8 @@ class VMCommand:
             assembly_lines = function_op(self.command, fname, line_num)
         elif self.cmd_type == VMCommandType.RETURN:
             assembly_lines = return_op(self.command, fname, line_num)
+        elif self.cmd_type == VMCommandType.CALL:
+            assembly_lines = call_op(self.command, fname, line_num)
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
@@ -211,7 +218,15 @@ def load_vm_lines(path: Path) -> List[str]:
 def load_vm_commands(path: Path) -> List[VMCommand]:
     lines = load_vm_lines(path=path)
     fname = get_vm_filename(path=path)
-    commands = [VMCommand(line=line, vm_filename=fname) for line in lines]
+    commands = []
+    for line in lines:
+        command_type = get_cmd_type(line)
+        vm_command = VMCommand(
+            line=line,
+            vm_filename=fname,
+            cmd_type=command_type,
+        )
+        commands.append(vm_command)
     return commands
 
 

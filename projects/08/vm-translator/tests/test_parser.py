@@ -114,7 +114,11 @@ def test_make_vm_command(
     exp_type: VMCommandType,
     exp_segment: SegmentType,
 ) -> None:
-    command = VMCommand(line=line, vm_filename="Foo.vm")
+    command = VMCommand(
+        line=line,
+        vm_filename="Foo.vm",
+        cmd_type=get_cmd_type(line),
+    )
     assert command.cmd_type == exp_type
     assert command.segment_type == exp_segment
     assert command.command == line
@@ -175,20 +179,35 @@ ASSEMBLY_ADD = [
 
 
 def test_push_constant_assembly() -> None:
-    command = VMCommand(line="push constant 17", vm_filename="Foo.vm")
+    line = "push constant 17"
+    command = VMCommand(
+        line=line,
+        vm_filename="Foo.vm",
+        cmd_type=get_cmd_type(line),
+    )
     assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_PUSH_CONSTANT_17
 
 
 def test_add_assembly() -> None:
-    command = VMCommand(line="add", vm_filename="Foo.vm")
+    line = "add"
+    command = VMCommand(
+        line=line,
+        vm_filename="Foo.vm",
+        cmd_type=get_cmd_type(line),
+    )
     assembly = command.to_assembly(line_num=0)
     assert assembly == ASSEMBLY_ADD
 
 
 @pytest.mark.skip("Everything is now implemented!")
 def test_not_implemented() -> None:
-    command = VMCommand(line="not", vm_filename="Foo.vm")
+    line = "not"
+    command = VMCommand(
+        line=line,
+        vm_filename="Foo.vm",
+        cmd_type=get_cmd_type(line),
+    )
     with pytest.raises(NotImplementedError):
         _ = command.to_assembly(line_num=0)
 
@@ -348,8 +367,16 @@ def test_to_assembly_with_offset(path: Path):
 
 def test_static(snapshot: PyTestSnapshotTest) -> None:
     vm_lines = [
-        VMCommand("push static 42", "Foo"),
-        VMCommand("pop static 69", "Foo"),
+        VMCommand(
+            "push static 42",
+            "Foo",
+            cmd_type=VMCommandType.PUSH,
+        ),
+        VMCommand(
+            "pop static 69",
+            "Foo",
+            cmd_type=VMCommandType.POP,
+        ),
     ]
     asm = vm_commands_to_assembly(vm_commands=vm_lines)
     snapshot.assert_match(asm)
