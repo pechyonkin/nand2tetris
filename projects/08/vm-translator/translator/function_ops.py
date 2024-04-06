@@ -1,5 +1,5 @@
 """Function ops: function, call, return."""
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 
 from translator.stack_ops import push_reg_d_to_stack, pop_from_stack
 
@@ -118,7 +118,14 @@ def return_op(line: str, fname: str, line_num: int) -> List[str]:
     return asm
 
 
-def call_op(line: str, fname: str, line_num: int) -> List[str]:
+def call_op(
+    line: str,
+    fname: str,
+    line_num: int,
+    cur_function: str,
+    return_counter: Optional[int],
+) -> List[str]:
+    assert return_counter, "Call command must have a return counter!"
     asm: List[str] = []
     # TODO: implement
     return asm

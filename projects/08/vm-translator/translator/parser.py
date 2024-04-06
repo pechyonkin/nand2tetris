@@ -127,18 +127,23 @@ class VMCommand:
         vm_filename: str,
         cmd_type: VMCommandType,
         cur_function: str,
+        return_counter: Optional[int] = None,
     ) -> None:
         """Initialize VMCommand representation of the .vm line
         :param line: string of .vm command line
         :param vm_filename: filename of the .vm file for this command
         :param cmd_type: command type of command
-        :param cur_function: current function in which this command is nested
+        :param cur_function: current function in which this command is nested.
+            This is full function name of format {.vm filename}.{function name}
+        :param return_counter: in a `call` command, number representing which
+            call command it is within the current function
         """
         self.cmd_type = cmd_type
         self.command = line
         self.vm_filename = vm_filename
         self.cur_function = cur_function
         self.segment_type: Optional[SegmentType] = self.get_segment_type()
+        self.return_counter = return_counter
 
     def get_segment_type(self) -> Optional[SegmentType]:
         if self.cmd_type not in (VMCommandType.POP, VMCommandType.PUSH):
@@ -196,7 +201,13 @@ class VMCommand:
         elif self.cmd_type == VMCommandType.RETURN:
             assembly_lines = return_op(self.command, fname, line_num)
         elif self.cmd_type == VMCommandType.CALL:
-            assembly_lines = call_op(self.command, fname, line_num)
+            assembly_lines = call_op(
+                line=self.command,
+                fname=fname,
+                line_num=line_num,
+                cur_function=self.cur_function,
+                return_counter=self.return_counter,
+            )
         else:
             msg = f"Couldn't assemble VM Command '{self.__str__()}'"
             raise NotImplementedError(msg)
@@ -235,15 +246,27 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
     for line in lines:
         command_type = get_cmd_type(line)
         cur_function = "Sys.init"
+        ret_counter = 0
         if command_type == VMCommandType.FUNCTION:
             parsed_line = parse_function_line(line=line)
             cur_function = parsed_line.full_function_name
-        vm_command = VMCommand(
-            line=line,
-            vm_filename=fname,
-            cmd_type=command_type,
-            cur_function=cur_function,
-        )
+            ret_counter = 0
+        if command_type == VMCommandType.CALL:
+            vm_command = VMCommand(
+                line=line,
+                vm_filename=fname,
+                cmd_type=command_type,
+                cur_function=cur_function,
+                return_counter=ret_counter,
+            )
+            ret_counter += 1
+        else:
+            vm_command = VMCommand(
+                line=line,
+                vm_filename=fname,
+                cmd_type=command_type,
+                cur_function=cur_function,
+            )
         commands.append(vm_command)
     return commands
 
