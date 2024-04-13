@@ -312,11 +312,33 @@ def process_file(path: Path) -> None:
         out_f.writelines(file_assembly_lines)
 
 
+def bootstrap_sys_init_call() -> List[str]:
+    """Return bootstrapping code for calling Sys.init"""
+    asm = [
+        "@256",
+        "D = A",
+        "@SP",
+        "M = D",
+    ]
+    asm += call_op(
+        line="call Sys.init 0",
+        fname="~Sys.vm~",  # not used
+        line_num=0,  # not used
+        cur_fname_dot_func="BOOTSTRAP",
+        return_counter=-1,
+    )
+    asm += ["// Bootstrap complete"]
+    asm = [line + "\n" for line in asm]
+    return asm
+
+
 def process_dir(path: Path) -> None:
     assembly_lines = []
+    assembly_lines += bootstrap_sys_init_call()
     for vm_file in path.glob("*.vm"):
+        file_assembly_lines = [f"// VM FILE: {vm_file}\n"]
         # Get the assembly lines for each .vm file
-        file_assembly_lines = get_file_assembly_lines(path=vm_file)
+        file_assembly_lines += get_file_assembly_lines(path=vm_file)
         # Add these lines to the overall list
         assembly_lines.extend(file_assembly_lines)
     out_path = get_output_path(path=path)
