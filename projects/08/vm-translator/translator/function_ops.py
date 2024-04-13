@@ -140,37 +140,43 @@ def call_op(
 
     # push return address to stack
     asm += [
+        "// CALL: push label with return address to stack",
         f"@{return_label}",
         "D = A",
     ] + push_reg_d_to_stack()
     # save LCL, ARG, THIS, THAT to stack
     for label in ("LCL", "ARG", "THIS", "THAT"):
         asm += [
+            f"// CALL: save {label} to stack",
             f"@{label}",
             "D = M",
         ] + push_reg_d_to_stack()
-    # reposition ARG
-    asm += [
-        "@SP",
-        "D = M",
-        "@5",
-        "D = D - A",
-        f"{n_args}",
-        "D = D - A",
-        "@ARG",
-        "M = D",
-    ]
     # LCL = SP
     asm += [
+        "// CALL: LCL = SP",
         "@SP",
         "D = M",
         "@LCL",
         "M = D",
     ]
+    # reposition ARG
+    asm += [
+        "// CALL: reposition ARG",
+        # @SP; D = M have already been done above, so D stores value in RAM[SP]
+        f"@{5 + n_args}",
+        "D = D - A",
+        "@ARG",
+        "M = D",
+    ]
     # goto function_name
     asm += [
+        "// CALL: goto function_name",
         f"@{called_func_name}",
         "0;JMP",
     ]
-    asm += [f"({return_label})"]
+    asm += [
+        "// CALL: declare label with return address to assembly stream",
+        f"({return_label})",
+        "// CALL: end of CALL handling",
+    ]
     return asm
