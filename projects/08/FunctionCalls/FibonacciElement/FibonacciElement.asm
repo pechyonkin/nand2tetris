@@ -2,6 +2,7 @@
 D = A
 @SP
 M = D
+// CALL: push label with return address to stack
 @BOOTSTRAP$ret.-1
 D = A
 @SP
@@ -9,6 +10,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save LCL to stack
 @LCL
 D = M
 @SP
@@ -16,6 +18,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save ARG to stack
 @ARG
 D = M
 @SP
@@ -23,6 +26,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THIS to stack
 @THIS
 D = M
 @SP
@@ -30,6 +34,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THAT to stack
 @THAT
 D = M
 @SP
@@ -37,17 +42,22 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: LCL = SP
 @SP
 D = M
 @LCL
 M = D
+// CALL: reposition ARG
 @5
 D = D - A
 @ARG
 M = D
+// CALL: goto function_name
 @Sys.init
 0;JMP
+// CALL: declare label with return address to assembly stream
 (BOOTSTRAP$ret.-1)
+// CALL: end of CALL handling
 // Bootstrap complete
 // VM FILE: ../../08/FunctionCalls/FibonacciElement/Main.vm
 // function Main.fibonacci 0
@@ -211,6 +221,7 @@ M = D
 @SP
 M = M + 1
 // call Main.fibonacci 1
+// CALL: push label with return address to stack
 @Main.fibonacci$ret.0
 D = A
 @SP
@@ -218,6 +229,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save LCL to stack
 @LCL
 D = M
 @SP
@@ -225,6 +237,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save ARG to stack
 @ARG
 D = M
 @SP
@@ -232,6 +245,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THIS to stack
 @THIS
 D = M
 @SP
@@ -239,6 +253,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THAT to stack
 @THAT
 D = M
 @SP
@@ -246,17 +261,22 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: LCL = SP
 @SP
 D = M
 @LCL
 M = D
+// CALL: reposition ARG
 @6
 D = D - A
 @ARG
 M = D
+// CALL: goto function_name
 @Main.fibonacci
 0;JMP
+// CALL: declare label with return address to assembly stream
 (Main.fibonacci$ret.0)
+// CALL: end of CALL handling
 // push argument 0
 @0
 D = A
@@ -291,6 +311,7 @@ M = D
 @SP
 M = M + 1
 // call Main.fibonacci 1
+// CALL: push label with return address to stack
 @Main.fibonacci$ret.1
 D = A
 @SP
@@ -298,6 +319,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save LCL to stack
 @LCL
 D = M
 @SP
@@ -305,6 +327,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save ARG to stack
 @ARG
 D = M
 @SP
@@ -312,6 +335,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THIS to stack
 @THIS
 D = M
 @SP
@@ -319,6 +343,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THAT to stack
 @THAT
 D = M
 @SP
@@ -326,17 +351,22 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: LCL = SP
 @SP
 D = M
 @LCL
 M = D
+// CALL: reposition ARG
 @6
 D = D - A
 @ARG
 M = D
+// CALL: goto function_name
 @Main.fibonacci
 0;JMP
+// CALL: declare label with return address to assembly stream
 (Main.fibonacci$ret.1)
+// CALL: end of CALL handling
 // add
 @SP
 M = M - 1
@@ -422,6 +452,7 @@ M = D
 @SP
 M = M + 1
 // call Main.fibonacci 1
+// CALL: push label with return address to stack
 @Sys.init$ret.0
 D = A
 @SP
@@ -429,6 +460,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save LCL to stack
 @LCL
 D = M
 @SP
@@ -436,6 +468,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save ARG to stack
 @ARG
 D = M
 @SP
@@ -443,6 +476,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THIS to stack
 @THIS
 D = M
 @SP
@@ -450,6 +484,7 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: save THAT to stack
 @THAT
 D = M
 @SP
@@ -457,17 +492,22 @@ A = M
 M = D
 @SP
 M = M + 1
+// CALL: LCL = SP
 @SP
 D = M
 @LCL
 M = D
+// CALL: reposition ARG
 @6
 D = D - A
 @ARG
 M = D
+// CALL: goto function_name
 @Main.fibonacci
 0;JMP
+// CALL: declare label with return address to assembly stream
 (Sys.init$ret.0)
+// CALL: end of CALL handling
 // label WHILE
 (Sys.init$WHILE)
 // goto WHILE

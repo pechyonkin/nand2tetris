@@ -401,10 +401,9 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
         BASIC_LOOP_PATH,
         FIB_SERIES_PATH,
         SIMPLE_FUNC_PATH,
-        # TODO: make these work
         NESTED_CALL_DIR_PATH,
         FIB_ELEM_DIR_PATH,
-        # STATICS_TEST_DIR_PATH,
+        STATICS_TEST_DIR_PATH,
     ),
 )
 def test_outfile_simple_add(path: Path) -> None:
