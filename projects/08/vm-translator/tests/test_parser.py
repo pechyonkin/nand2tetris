@@ -403,7 +403,7 @@ def test_static(snapshot: PyTestSnapshotTest) -> None:
         SIMPLE_FUNC_PATH,
         # TODO: make these work
         NESTED_CALL_DIR_PATH,
-        # FIB_ELEM_DIR_PATH,
+        FIB_ELEM_DIR_PATH,
         # STATICS_TEST_DIR_PATH,
     ),
 )
