@@ -9,10 +9,15 @@ def get_label(line: str) -> str:
     return words[1]
 
 
-def label_op(line: str, fname: str, line_num: int) -> List[str]:
+def label_op(
+    line: str,
+    fname: str,
+    line_num: int,
+    cur_func: str,
+) -> List[str]:
     """Generate assembly for label op."""
     label = get_label(line=line)
     asm: List[str] = [
-        f"({label})",
+        f"({cur_func}${label})",
     ]
     return asm
