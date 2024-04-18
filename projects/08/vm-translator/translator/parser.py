@@ -250,9 +250,9 @@ def load_vm_commands(path: Path) -> List[VMCommand]:
     lines = load_vm_lines(path=path)
     fname = get_vm_filename(path=path)
     commands = []
+    cur_function = "Sys.init"
     for line in lines:
         command_type = get_cmd_type(line)
-        cur_function = "Sys.init"
         ret_counter = 0
         if command_type == VMCommandType.FUNCTION:
             parsed_line = parse_function_line(line=line)
