@@ -75,7 +75,7 @@ snapshots['test_label_ops[path0] 1'] = [
     'A = M',
     'M = D',
     '// label LOOP_START',
-    '(LOOP_START)',
+    '(Sys.init$LOOP_START)',
     '// push argument 0',
     '@0',
     'D = A',
@@ -197,7 +197,7 @@ snapshots['test_label_ops[path0] 1'] = [
     'M = M - 1',
     'A = M',
     'D = M',
-    '@LOOP_START',
+    '@Sys.init$LOOP_START',
     'D;JNE',
     '// push local 0',
     '@0',
@@ -335,7 +335,7 @@ snapshots['test_label_ops[path1] 1'] = [
     'A = M',
     'M = D',
     '// label MAIN_LOOP_START',
-    '(MAIN_LOOP_START)',
+    '(Sys.init$MAIN_LOOP_START)',
     '// push argument 0',
     '@0',
     'D = A',
@@ -352,13 +352,13 @@ snapshots['test_label_ops[path1] 1'] = [
     'M = M - 1',
     'A = M',
     'D = M',
-    '@COMPUTE_ELEMENT',
+    '@Sys.init$COMPUTE_ELEMENT',
     'D;JNE',
     '// goto END_PROGRAM',
-    '@END_PROGRAM',
+    '@Sys.init$END_PROGRAM',
     '0;JMP',
     '// label COMPUTE_ELEMENT',
-    '(COMPUTE_ELEMENT)',
+    '(Sys.init$COMPUTE_ELEMENT)',
     '// push that 0',
     '@0',
     'D = A',
@@ -502,10 +502,10 @@ snapshots['test_label_ops[path1] 1'] = [
     'A = M',
     'M = D',
     '// goto MAIN_LOOP_START',
-    '@MAIN_LOOP_START',
+    '@Sys.init$MAIN_LOOP_START',
     '0;JMP',
     '// label END_PROGRAM',
-    '(END_PROGRAM)'
+    '(Sys.init$END_PROGRAM)'
 ]
 
 snapshots['test_load_vm_commands 1'] = [
@@ -514,150 +514,175 @@ snapshots['test_load_vm_commands 1'] = [
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop local 0
 \tcmd_type: POP
 \tsegment: LOCAL
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 21
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 22
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop argument 2
 \tcmd_type: POP
 \tsegment: ARGUMENT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop argument 1
 \tcmd_type: POP
 \tsegment: ARGUMENT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 36
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop this 6
 \tcmd_type: POP
 \tsegment: THIS
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 42
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 45
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop that 5
 \tcmd_type: POP
 \tsegment: THAT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop that 2
 \tcmd_type: POP
 \tsegment: THAT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push constant 510
 \tcmd_type: PUSH
 \tsegment: CONSTANT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: pop temp 6
 \tcmd_type: POP
 \tsegment: TEMP
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push local 0
 \tcmd_type: PUSH
 \tsegment: LOCAL
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push that 5
 \tcmd_type: PUSH
 \tsegment: THAT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: add
 \tcmd_type: ARITHMETIC
 \tsegment: None
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push argument 1
 \tcmd_type: PUSH
 \tsegment: ARGUMENT
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: sub
 \tcmd_type: ARITHMETIC
 \tsegment: None
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push this 6
 \tcmd_type: PUSH
 \tsegment: THIS
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push this 6
 \tcmd_type: PUSH
 \tsegment: THIS
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: add
 \tcmd_type: ARITHMETIC
 \tsegment: None
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: sub
 \tcmd_type: ARITHMETIC
 \tsegment: None
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: push temp 6
 \tcmd_type: PUSH
 \tsegment: TEMP
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None''',
     '''VMCommand:
 \tcommand: add
 \tcmd_type: ARITHMETIC
 \tsegment: None
 \tvm_filename: BasicTest
+\tcur_func: Sys.init
 \tret_counter: None'''
 ]
 

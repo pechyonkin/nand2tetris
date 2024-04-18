@@ -68,7 +68,9 @@ POP_SEGMENT_FN_MAP: Dict[SegmentType, Callable[[str, str, int], List[str]]] = {
 }
 
 
-LABEL_OP_FN_MAP: Dict[VMCommandType, Callable[[str, str, int], List[str]]] = {
+LABEL_OP_FN_MAP: Dict[
+    VMCommandType, Callable[[str, str, int, str], List[str]]
+] = {
     VMCommandType.LABEL: label_op,
     VMCommandType.GOTO: goto_op,
     VMCommandType.IF_GOTO: if_goto_op,
@@ -160,7 +162,8 @@ class VMCommand:
         str_repr = (
             f"VMCommand:\n\tcommand: {self.command}\n\tcmd_type: "
             f"{self.cmd_type.name}\n\tsegment: {segment}\n\tvm_filename: "
-            f"{self.vm_filename}\n\tret_counter: {self.return_counter}"
+            f"{self.vm_filename}\n\tcur_func: {self.cur_fname_dot_func}"
+            f"\n\tret_counter: {self.return_counter}"
         )
         return str_repr
 
@@ -195,7 +198,10 @@ class VMCommand:
             VMCommandType.IF_GOTO,
         ):
             assembly_lines = LABEL_OP_FN_MAP[self.cmd_type](
-                self.command, fname, line_num
+                self.command,
+                fname,
+                line_num,
+                self.cur_fname_dot_func,
             )
         elif self.cmd_type == VMCommandType.FUNCTION:
             assembly_lines = function_op(self.command, fname, line_num)
